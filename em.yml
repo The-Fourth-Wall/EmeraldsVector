@@ -1,0 +1,12 @@
+name: Vector
+version: 0.1.0
+
+dependencies:
+  cSpec: Oblivious-Oblivious/cSpec
+
+license: GPLv3
+
+application: make
+library: make lib
+test: make test
+clean: make clean
