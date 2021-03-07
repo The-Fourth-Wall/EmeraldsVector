@@ -36,6 +36,8 @@ int main(void) {
 
 * Make memory access faster
 * Perform micro optimizations on code
+* Add a select action along with filter
+* Figure out word size of machine for correct conversions
 
 ## Contributing
 

@@ -1,15 +1,9 @@
 #include "Vector.spec.h"
 
-module(T_Vector, {
-    describe("#get_value", {
-        it("returns `Hello, World!`", {
-            assert_that_charptr("Hello, World!" equals to "Hello, World!");
-        });
-    });
-});
-
 spec_suite({
-    T_Vector();
+    T_vector_base();
+    T_vector_dup();
+    T_vector_functional_functions();
 });
 
 spec({
