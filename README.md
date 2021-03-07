@@ -4,7 +4,8 @@ A dynamic list using fast memory management (golden ratio increase)
 
 # Installation
 
-* Install the library 
+* Install the library
+
 `em list`
 `em install`
 `em build lib`
@@ -30,6 +31,7 @@ int main(void) {
 ```
 
 * Compile
+
 `clang test.c export/Vector.so`
 
 ## Development
