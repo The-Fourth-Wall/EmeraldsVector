@@ -3,6 +3,7 @@ version: 0.1.0
 
 dependencies:
   cSpec: Oblivious-Oblivious/cSpec
+  Bool: Oblivious-Oblivious/Bool
 
 license: GPLv3
 
