@@ -2,6 +2,7 @@
 #define __VECTOR_FUNCTIONAL_FUNCTIONS_H_
 
 #include "vector_base.h"
+#include "../../../libs/Bool/export/Bool.h"
 
 /**
  * @func: vector_lambda
@@ -25,13 +26,21 @@ vector *vector_map(vector *v, vector_lambda modifier);
 
 /**
  * @func: vector_filter
- B
  * @desc: Filters all vector elements in iteration using a filter function
  * @param v -> The vector to filter
  * @param filter -> The filter function
  * @return The filtered vector duplicate
  **/
 vector *vector_filter(vector *v, vector_lambda filter);
+
+/**
+ * @func: vector_select
+ * @brief Selects vector elements according to a selector lambda
+ * @param v -> The vector to select from
+ * @param selector -> The selector function
+ * @return vector* -> The filtered vector duplicate
+ */
+vector *vector_select(vector *v, vector_lambda selector);
 
 /**
  * @func: vector_reduce
@@ -41,5 +50,32 @@ vector *vector_filter(vector *v, vector_lambda filter);
  * @return The folder void* result
  **/
 void *vector_reduce(vector *v, vector_lambda fold);
-#endif
 
+/**
+ * @func: vector_all
+ * @brief Checks if all elements pass through a checker function conditional
+ * @param v -> The vector to check
+ * @param checker -> The checker function
+ * @return bool -> true if all elements pass, else false
+ */
+bool vector_all(vector *v, vector_lambda checker);
+
+/**
+ * @func: vector_any
+ * @brief Checks if any of the elements pass through a checker function
+ * @param v -> The vector to check
+ * @param checker -> The checker function
+ * @return bool -> true if at least one of the elements pass, else false
+ */
+bool vector_any(vector *v, vector_lambda checker);
+
+/**
+ * @func: vector_none
+ * @brief Checks if none of the elementrs pass through a checker function
+ * @param v -> The vector to check
+ * @param checker -> The checker function
+ * @return bool -> true if none of the elements pass, else false
+ */
+bool vector_none(vector *v, vector_lambda checker);
+
+#endif

@@ -36,8 +36,6 @@ int main(void) {
 
 ## Development
 
-* Make memory access faster
-* Add a select action along with filter
 * Figure out word size of machine for correct conversions
 
 ## Contributing
