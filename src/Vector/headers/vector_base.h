@@ -32,8 +32,9 @@ vector *vector_new(void);
  * @desc: Adds a new element in the vector
  * @param v -> The vector to use
  * @param item -> The item to add
+ * @return The modified vector
  **/
-void vector_add(vector *v, void *item);
+vector *vector_add(vector *v, void *item);
 
 /**
  * @func: vector_set
@@ -41,8 +42,9 @@ void vector_add(vector *v, void *item);
  * @param v-> The vector
  * @param index -> The index to set the value of
  * @param item -> The item to set the value as
+ * @return The modified vector
  **/
-void vector_set(vector *v, size_t index, void *item);
+vector *vector_set(vector *v, size_t index, void *item);
 
 /**
  * @func: vector_get
@@ -58,8 +60,9 @@ void *vector_get(vector *v, size_t index);
  * @desc: Delete a specific vector value by index
  * @param v -> The vector to use
  * @param index -> The index to delete
+ * @return The modified vector
  **/
-void vector_delete(vector *v, size_t index);
+vector *vector_delete(vector *v, size_t index);
 
 /**
  * @func: vector_length
@@ -70,4 +73,3 @@ void vector_delete(vector *v, size_t index);
 size_t vector_length(vector *v);
 
 #endif
-

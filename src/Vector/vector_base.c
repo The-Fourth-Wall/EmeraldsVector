@@ -29,37 +29,45 @@ vector *vector_new(void) {
     return v;
 }
 
-void vector_add(vector *v, void *item) {
+vector *vector_add(vector *v, void *item) {
     /* TODO We allow NULL elements (NOT TESTED) */
-    if(v == NULL) return;
+    if(v == NULL) return v;
     if(v->alloced == v->length)
         vector_ensure_space(v, v->alloced * 2);
     v->items[v->length++] = item;
+
+    return v;
 }
 
-void vector_set(vector *v, size_t index, void *item) {
-    if(v == NULL) return;
+vector *vector_set(vector *v, size_t index, void *item) {
+    if(v == NULL) return v;
     if(index < v->length)
         v->items[index] = item;
+    
+    return v;
 }
 
 void *vector_get(vector *v, size_t index) {
     if(v == NULL) return NULL;
     if(index < v->length)
         return v->items[index];
+    
+    /* TODO -> FIX NULLITY */
     return NULL;
 }
 
-void vector_delete(vector *v, size_t index) {
+vector *vector_delete(vector *v, size_t index) {
     size_t i;
+    size_t vlen;
     
-    if(v == NULL) return;
-    if(index >= v->length) return;
+    if(v == NULL) return v;
+    if(index >= v->length) return v;
     
     v->items[index] = NULL;
 
     /* Reset the rest of the elements forwards */
-    for(i = index; i < v->length - 1; i++) {
+    vlen = vector_length(v);
+    for(i = index; i < vlen - 1; i++) {
         v->items[i] = v->items[i + 1];
         v->items[i + 1] = NULL;
     }
@@ -68,6 +76,8 @@ void vector_delete(vector *v, size_t index) {
 
     if(v->length > 0 && v->length == v->alloced / 4)
         vector_ensure_space(v, v->alloced / 2);
+    
+    return v;
 }
 
 size_t vector_length(vector *v) {
