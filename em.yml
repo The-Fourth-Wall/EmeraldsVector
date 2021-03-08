@@ -2,8 +2,10 @@ name: Vector
 version: 0.1.0
 
 dependencies:
-  cSpec: Oblivious-Oblivious/cSpec
   Bool: Oblivious-Oblivious/Bool
+
+dev-dependencies:
+  cSpec: Oblivious-Oblivious/cSpec
 
 license: GPLv3
 
