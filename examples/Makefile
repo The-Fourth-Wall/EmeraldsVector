@@ -8,7 +8,7 @@ OUTPUT = a.out
 FLAGS = -Wall -Wextra -Werror -pedantic -pedantic-errors -Wpedantic
 WARNINGS = -Wno-unused-function
 HEADERS =
-LIBS = ../export/*.so
+LIBS = ../export/*.o $(shell find ./libs -name "*.*o" | xargs ls -d)
 
 INPUT = $(NAME).c
 
