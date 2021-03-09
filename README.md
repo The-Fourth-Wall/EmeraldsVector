@@ -32,11 +32,12 @@ int main(void) {
 
 * Compile
 
-`clang test.c export/Vector.so`
+`clang test.c export/*.*o`
 
 ## Development
 
 * Figure out word size of machine for correct conversions
+* Implement a free function
 
 ## Contributing
 
