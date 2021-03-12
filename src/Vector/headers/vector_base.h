@@ -72,4 +72,11 @@ vector *vector_delete(vector *v, size_t index);
  **/
 size_t vector_length(vector *v);
 
+/**
+ * @func: vector_free
+ * @brief Frees the memory of the vector
+ * @param v -> The vector to free
+ */
+void vector_free(vector *v);
+
 #endif

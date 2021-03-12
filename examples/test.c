@@ -37,5 +37,9 @@ int main(void) {
     sum = (long)vector_reduce(positive_double_testv, (vector_lambda)adder);
     printf("SUM: `%ld` should be `30`\n\n", sum);
 
+    vector_free(testv);
+    vector_free(double_testv);
+    vector_free(positive_double_testv);
+
     return 0;
 }

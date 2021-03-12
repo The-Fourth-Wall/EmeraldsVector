@@ -37,7 +37,6 @@ int main(void) {
 ## Development
 
 * Figure out word size of machine for correct conversions
-* Implement a free function
 
 ## Contributing
 

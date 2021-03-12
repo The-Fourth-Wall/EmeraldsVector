@@ -52,5 +52,10 @@ module(T_vector_base, {
             vector_delete(vv, 0);
             assert_that_int(vector_length(vv) equals to 0);
         });
+
+        it("frees vector items without error", {
+            vector_free(v);
+            assert_that(true is true);
+        });
     });
 });
