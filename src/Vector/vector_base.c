@@ -1,5 +1,7 @@
 #include "headers/vector_base.h"
 
+#define GOLDEN_MEAN 1.618
+
 /**
  * @func: vector_ensure_space
  * @desc: Ensure there is enough space for our values in the vector
@@ -33,7 +35,7 @@ vector *vector_add(vector *v, void *item) {
     /* TODO We allow NULL elements (NOT TESTED) */
     if(v == NULL) return v;
     if(v->alloced == v->length)
-        vector_ensure_space(v, v->alloced * 2);
+        vector_ensure_space(v, v->alloced * GOLDEN_MEAN);
     v->items[v->length++] = item;
 
     return v;
@@ -75,7 +77,7 @@ vector *vector_delete(vector *v, size_t index) {
     v->length--;
 
     if(v->length > 0 && v->length == v->alloced / 4)
-        vector_ensure_space(v, v->alloced / 2);
+        vector_ensure_space(v, v->alloced / GOLDEN_MEAN);
     
     return v;
 }
