@@ -90,8 +90,10 @@ size_t vector_length(vector *v) {
 void vector_free(vector *v) {
     size_t i;
     size_t vlen = vector_length(v);
-    // for(i = 0; i < vlen; i++)
-    //     free(v->items[i]);
+    /* 
+    for(i = 0; i < vlen; i++)
+        free(v->items[i]);
+    */
     
     free(v->items);
     free(v);
