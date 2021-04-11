@@ -36,6 +36,8 @@ int main(void) {
 
 ## Development
 
+* Provide a custom free function pointer for specific deallocations
+    (also to set a framework for an efficient garbage collector)
 * Figure out word size of machine for correct conversions
 
 ## Contributing
