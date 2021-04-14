@@ -16,6 +16,8 @@ vector *vector_map(vector *v, vector_lambda modifier) {
         vector_add(dup, modifier(vector_get(v, i)));
     }
 
+    vector_free(v);
+
     return dup;
 }
 
@@ -36,6 +38,8 @@ vector *vector_filter(vector *v, vector_lambda filter) {
             vector_add(dup, item);
     }
 
+    vector_free(v);
+
     return dup;
 }
 
@@ -55,6 +59,8 @@ vector *vector_select(vector *v, vector_lambda selector) {
         if(selector(item))
             vector_add(dup, item);
     }
+
+    vector_free(v);
 
     return dup;
 }
