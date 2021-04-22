@@ -9,7 +9,7 @@ vector *vector_map(vector *v, vector_lambda modifier) {
     if(v == NULL || modifier == NULL) return NULL;
 
     dup = vector_new();
-    
+
     vlen = vector_length(v);
     for(i = 0; i < vlen; i++) {
         /* Pass each element through the modifier and add it to the new vector */
@@ -24,13 +24,11 @@ vector *vector_map(vector *v, vector_lambda modifier) {
 vector *vector_filter(vector *v, vector_lambda filter) {
     vector *dup = NULL;
     size_t i;
-    size_t vlen;
-    
+
     if(v == NULL || filter == NULL) return NULL;
 
     dup = vector_new();
 
-    vlen = vector_length(v);
     for(i = 0; i < vector_length(v); i++) {
         void *item = vector_get(v, i);
         /* If the item passes the filter it gets added to the dup vector */
@@ -46,13 +44,11 @@ vector *vector_filter(vector *v, vector_lambda filter) {
 vector *vector_select(vector *v, vector_lambda selector) {
     vector *dup = NULL;
     size_t i;
-    size_t vlen;
-    
+
     if(v == NULL || selector == NULL) return NULL;
 
     dup = vector_new();
 
-    vlen = vector_length(v);
     for(i = 0; i < vector_length(v); i++) {
         void *item = vector_get(v, i);
         /* If the item gets selected it gets added to the dup vector */
@@ -82,18 +78,16 @@ void *vector_reduce(vector *v, vector_lambda fold) {
         void *current = vector_get(v, i);
         accumulator = fold(accumulator, current);
     }
-    
+
     return accumulator;
 }
 
 bool vector_all(vector *v, vector_lambda checker) {
     size_t i;
-    size_t vlen;
-    
+
     if(v == NULL || checker == NULL || vector_length(v) == 0)
         return false;
 
-    vlen = vector_length(v);
     for(i = 0; i < vector_length(v); i++) {
         void *item = vector_get(v, i);
         /* If the item gets selected it gets added to the dup vector */
@@ -106,11 +100,9 @@ bool vector_all(vector *v, vector_lambda checker) {
 
 bool vector_any(vector *v, vector_lambda checker) {
     size_t i;
-    size_t vlen;
-    
+
     if(v == NULL || checker == NULL) return false;
 
-    vlen = vector_length(v);
     for(i = 0; i < vector_length(v); i++) {
         void *item = vector_get(v, i);
         /* If the item gets selected it gets added to the dup vector */
@@ -123,11 +115,9 @@ bool vector_any(vector *v, vector_lambda checker) {
 
 bool vector_none(vector *v, vector_lambda checker) {
     size_t i;
-    size_t vlen;
-    
+
     if(v == NULL || checker == NULL) return false;
 
-    vlen = vector_length(v);
     for(i = 0; i < vector_length(v); i++) {
         void *item = vector_get(v, i);
         /* If the item gets selected it gets added to the dup vector */
