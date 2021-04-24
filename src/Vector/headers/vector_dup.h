@@ -6,10 +6,10 @@
 /**
  * @func: vector_dup
  * @desc: Get a memory duplicate of the passed vector
- * @param v -> The vector to use
+ * @param self -> The vector to use
  * @return The duplicate vector
  **/
-vector *vector_dup(vector *v);
+vector *vector_dup(vector *self);
 
 #endif
 

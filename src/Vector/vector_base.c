@@ -5,92 +5,92 @@
 /**
  * @func: vector_ensure_space
  * @desc: Ensure there is enough space for our values in the vector
- * @param v -> The vector to use
+ * @param self -> The vector to use
  * @param capacity -> The new capacity to set
  **/
-static void vector_ensure_space(vector *v, size_t capacity) {
+static void vector_ensure_space(vector *self, size_t capacity) {
     void **items = NULL;
     
-    if(v == NULL || capacity == 0) return;
+    if(self == NULL || capacity == 0) return;
 
     /* Attempt to reallocate new memory in the items list */
-    items = realloc(v->items, sizeof(void*) * capacity);
+    items = realloc(self->items, sizeof(void*) * capacity);
 
     if(items) {
         /* Reset the items in the new memory space */
-        v->items = items;
-        v->alloced = capacity;
+        self->items = items;
+        self->alloced = capacity;
     }
 }
 
 vector *vector_new(void) {
-    vector *v = (vector*)malloc(sizeof(vector));
-    v->alloced = vector_init_capacity;
-    v->length = 0;
-    v->items = (void**)malloc(sizeof(void*) * v->alloced);
-    return v;
+    vector *self = (vector*)malloc(sizeof(vector));
+    self->alloced = vector_init_capacity;
+    self->length = 0;
+    self->items = (void**)malloc(sizeof(void*) * self->alloced);
+    return self;
 }
 
-vector *vector_add(vector *v, void *item) {
+vector *vector_add(vector *self, void *item) {
     /* TODO We allow NULL elements (NOT TESTED) */
-    if(v == NULL) return v;
-    if(v->alloced == v->length)
-        vector_ensure_space(v, v->alloced * GOLDEN_MEAN);
-    v->items[v->length++] = item;
+    if(self == NULL) return self;
+    if(self->alloced == self->length)
+        vector_ensure_space(self, self->alloced * GOLDEN_MEAN);
+    self->items[self->length++] = item;
 
-    return v;
+    return self;
 }
 
-vector *vector_set(vector *v, size_t index, void *item) {
-    if(v == NULL) return v;
-    if(index < v->length)
-        v->items[index] = item;
+vector *vector_set(vector *self, size_t index, void *item) {
+    if(self == NULL) return self;
+    if(index < self->length)
+        self->items[index] = item;
     
-    return v;
+    return self;
 }
 
-void *vector_get(vector *v, size_t index) {
-    if(v == NULL) return NULL;
-    if(index < v->length)
-        return v->items[index];
+void *vector_get(vector *self, size_t index) {
+    if(self == NULL) return NULL;
+    if(index < self->length)
+        return self->items[index];
     
     /* TODO -> FIX NULLITY */
     return NULL;
 }
 
-vector *vector_delete(vector *v, size_t index) {
+vector *vector_delete(vector *self, size_t index) {
     size_t i;
     size_t vlen;
     
-    if(v == NULL) return v;
-    if(index >= v->length) return v;
+    if(self == NULL) return self;
+    if(index >= self->length) return self;
     
-    v->items[index] = NULL;
+    self->items[index] = NULL;
 
     /* Reset the rest of the elements forwards */
-    vlen = vector_length(v);
+    vlen = vector_length(self);
     for(i = index; i < vlen - 1; i++) {
-        v->items[i] = v->items[i + 1];
-        v->items[i + 1] = NULL;
+        self->items[i] = self->items[i + 1];
+        self->items[i + 1] = NULL;
     }
 
-    v->length--;
+    self->length--;
 
-    if(v->length > 0 && v->length == v->alloced / 4)
-        vector_ensure_space(v, v->alloced / GOLDEN_MEAN);
+    if(self->length > 0 && self->length == self->alloced / 4)
+        vector_ensure_space(self, self->alloced / GOLDEN_MEAN);
     
-    return v;
+    return self;
 }
 
-size_t vector_length(vector *v) {
-    if(v == NULL) return 0;
-    return v->length;
+size_t vector_length(vector *self) {
+    if(self == NULL) return 0;
+    return self->length;
 }
 
-void vector_free(vector *v) {
+void vector_free(vector *self) {
     /* TODO -> IMPLEMENT A CUSTOM FREE METHOD FOR ARRAY ELEMENTS */
-    if(v != NULL && v->items != NULL)
-        free(v->items);
-    if(v != NULL)
-        free(v);
+    if(self != NULL && self->items != NULL)
+        free(self->items);
+    if(self != NULL)
+        free(self);
 }

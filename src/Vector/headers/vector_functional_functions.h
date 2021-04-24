@@ -22,7 +22,7 @@ typedef void* (*vector_lambda)();
  * @param modifier -> The modifier function
  * @return The mapped vector duplicate
  **/
-vector *vector_map(vector *v, vector_lambda modifier);
+vector *vector_map(vector *self, vector_lambda modifier);
 
 /**
  * @func: vector_filter
@@ -31,7 +31,7 @@ vector *vector_map(vector *v, vector_lambda modifier);
  * @param filter -> The filter function
  * @return The filtered vector duplicate
  **/
-vector *vector_filter(vector *v, vector_lambda filter);
+vector *vector_filter(vector *self, vector_lambda filter);
 
 /**
  * @func: vector_select
@@ -40,7 +40,7 @@ vector *vector_filter(vector *v, vector_lambda filter);
  * @param selector -> The selector function
  * @return vector* -> The filtered vector duplicate
  */
-vector *vector_select(vector *v, vector_lambda selector);
+vector *vector_select(vector *self, vector_lambda selector);
 
 /**
  * @func: vector_reduce
@@ -49,7 +49,7 @@ vector *vector_select(vector *v, vector_lambda selector);
  * @param fold -> The folding function to use
  * @return The folder void* result
  **/
-void *vector_reduce(vector *v, vector_lambda fold);
+void *vector_reduce(vector *self, vector_lambda fold);
 
 /**
  * @func: vector_all
@@ -58,7 +58,7 @@ void *vector_reduce(vector *v, vector_lambda fold);
  * @param checker -> The checker function
  * @return bool -> true if all elements pass, else false
  */
-bool vector_all(vector *v, vector_lambda checker);
+bool vector_all(vector *self, vector_lambda checker);
 
 /**
  * @func: vector_any
@@ -67,7 +67,7 @@ bool vector_all(vector *v, vector_lambda checker);
  * @param checker -> The checker function
  * @return bool -> true if at least one of the elements pass, else false
  */
-bool vector_any(vector *v, vector_lambda checker);
+bool vector_any(vector *self, vector_lambda checker);
 
 /**
  * @func: vector_none
@@ -76,6 +76,6 @@ bool vector_any(vector *v, vector_lambda checker);
  * @param checker -> The checker function
  * @return bool -> true if none of the elements pass, else false
  */
-bool vector_none(vector *v, vector_lambda checker);
+bool vector_none(vector *self, vector_lambda checker);
 
 #endif
