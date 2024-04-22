@@ -2,7 +2,7 @@ name: Vector
 version: 0.1.0
 
 dependencies:
-  Bool: EmeraldsFramework/Bool
+  Bool: Oblivious-Oblivious/EmeraldsBool
 
 dev-dependencies:
   cSpec: Oblivious-Oblivious/cSpec

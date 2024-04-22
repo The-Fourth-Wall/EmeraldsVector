@@ -2,7 +2,7 @@
 #define __VECTOR_FUNCTIONAL_FUNCTIONS_H_
 
 #include "vector_base.h"
-#include "../../../libs/Bool/export/Bool.h"
+#include "../../../libs/Bool/Bool.h"
 
 /**
  * @func: vector_lambda
