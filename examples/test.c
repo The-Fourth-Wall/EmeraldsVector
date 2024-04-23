@@ -30,9 +30,9 @@ int main(void) {
     vector_add(testv, (void*)4);
     vector_add(testv, (void*)-5);
 
-    testv = vector_map(testv, (vector_lambda)double_item);
-    testv = vector_select(testv, (vector_lambda)positive_filter);
-    sum = (long)vector_reduce(testv, (vector_lambda)adder);
+    testv = vector_map(testv, (vector_lambda1)double_item);
+    testv = vector_select(testv, (vector_lambda1)positive_filter);
+    sum = (long)vector_reduce(testv, (vector_lambda2)adder);
     printf("SUM: `%ld` should be `30`\n\n", sum);
 
     vector_free(testv);

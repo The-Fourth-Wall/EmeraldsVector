@@ -1,8 +1,8 @@
 #ifndef __VECTOR_FUNCTIONAL_FUNCTIONS_H_
 #define __VECTOR_FUNCTIONAL_FUNCTIONS_H_
 
-#include "vector_base.h"
 #include "../../../libs/Bool/Bool.h"
+#include "vector_base.h"
 
 /**
  * @func: vector_lambda
@@ -13,7 +13,9 @@
 /* The param void* can have more than 1 argument stored as a list of some sort */
 /* Since this is completely generic we can't check for validity of arguments */
 /* The validity of the function is dependent on the callee */
-typedef void* (*vector_lambda)();
+typedef void* (*vector_lambda0)(void);
+typedef void* (*vector_lambda1)(void*);
+typedef void* (*vector_lambda2)(void*, void*);
 
 /**
  * @func: vector_map
@@ -22,7 +24,7 @@ typedef void* (*vector_lambda)();
  * @param modifier -> The modifier function
  * @return The mapped vector duplicate
  **/
-vector *vector_map(vector *self, vector_lambda modifier);
+vector *vector_map(vector *self, vector_lambda1 modifier);
 
 /**
  * @func: vector_filter
@@ -31,7 +33,7 @@ vector *vector_map(vector *self, vector_lambda modifier);
  * @param filter -> The filter function
  * @return The filtered vector duplicate
  **/
-vector *vector_filter(vector *self, vector_lambda filter);
+vector *vector_filter(vector *self, vector_lambda1 filter);
 
 /**
  * @func: vector_select
@@ -40,7 +42,7 @@ vector *vector_filter(vector *self, vector_lambda filter);
  * @param selector -> The selector function
  * @return vector* -> The filtered vector duplicate
  */
-vector *vector_select(vector *self, vector_lambda selector);
+vector *vector_select(vector *self, vector_lambda1 selector);
 
 /**
  * @func: vector_reduce
@@ -49,7 +51,7 @@ vector *vector_select(vector *self, vector_lambda selector);
  * @param fold -> The folding function to use
  * @return The folder void* result
  **/
-void *vector_reduce(vector *self, vector_lambda fold);
+void *vector_reduce(vector *self, vector_lambda2 fold);
 
 /**
  * @func: vector_all
@@ -58,7 +60,7 @@ void *vector_reduce(vector *self, vector_lambda fold);
  * @param checker -> The checker function
  * @return bool -> true if all elements pass, else false
  */
-bool vector_all(vector *self, vector_lambda checker);
+bool vector_all(vector *self, vector_lambda1 checker);
 
 /**
  * @func: vector_any
@@ -67,7 +69,7 @@ bool vector_all(vector *self, vector_lambda checker);
  * @param checker -> The checker function
  * @return bool -> true if at least one of the elements pass, else false
  */
-bool vector_any(vector *self, vector_lambda checker);
+bool vector_any(vector *self, vector_lambda1 checker);
 
 /**
  * @func: vector_none
@@ -76,6 +78,6 @@ bool vector_any(vector *self, vector_lambda checker);
  * @param checker -> The checker function
  * @return bool -> true if none of the elements pass, else false
  */
-bool vector_none(vector *self, vector_lambda checker);
+bool vector_none(vector *self, vector_lambda1 checker);
 
 #endif

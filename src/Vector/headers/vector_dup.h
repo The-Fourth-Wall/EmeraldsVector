@@ -12,4 +12,3 @@
 vector *vector_dup(vector *self);
 
 #endif
-

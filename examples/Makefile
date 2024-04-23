@@ -6,7 +6,7 @@ VERSION = -std=c89
 OUTPUT = a.out
 
 FLAGS = -Wall -Wextra -Werror -pedantic -pedantic-errors -Wpedantic
-WARNINGS = -Wno-unused-function
+WARNINGS = -Wno-unused-function -Wno-strict-prototypes
 HEADERS =
 LIBS = ../export/*.*o
 

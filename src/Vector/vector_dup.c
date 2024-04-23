@@ -2,18 +2,19 @@
 #include "headers/vector_base.h"
 
 vector *vector_dup(vector *self) {
-    vector *dup = NULL;
-    size_t i;
-    size_t vlen;
-    
-    if(self == NULL) return NULL;
+  vector *dup = NULL;
+  size_t i;
+  size_t vlen;
 
-    dup = vector_new();
-    
-    /* Iteratively copy the vector items from one memory location to another */
-    vlen = vector_length(self);
-    for(i = 0; i < vlen; i++)
-        vector_add(dup, vector_get(self, i));
+  if (self == NULL)
+    return NULL;
 
-    return dup;
+  dup = vector_new();
+
+  /* Iteratively copy the vector items from one memory location to another */
+  vlen = vector_length(self);
+  for (i = 0; i < vlen; i++)
+    vector_add(dup, vector_get(self, i));
+
+  return dup;
 }

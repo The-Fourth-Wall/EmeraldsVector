@@ -11,13 +11,13 @@ static const size_t vector_init_capacity = 32;
  * @desc: Defines a vector data structure
  * @param items -> A void pointer array that contains the heterogenous elements of the vector
  * @param alloced -> The total capacity of the vector
- * @param length -> The total number of values
+ * @param size -> The total number of values
  **/
 typedef struct vector {
-    /* TODO -> USE A TYPED UNION INSTEAD OF VOID POINTERS */
-    void **items;
-    size_t alloced;
-    size_t length;
+  /* TODO -> USE A TYPED UNION INSTEAD OF VOID POINTERS */
+  void **items;
+  size_t alloced;
+  size_t size;
 } vector;
 
 /**
