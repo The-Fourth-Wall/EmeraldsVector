@@ -1,7 +1,7 @@
 #ifndef __VECTOR_FUNCTIONAL_FUNCTIONS_H_
 #define __VECTOR_FUNCTIONAL_FUNCTIONS_H_
 
-#include "../../../libs/Bool/Bool.h"
+#include "../../../libs/Bool/export/Bool.h"
 #include "vector_base.h"
 
 /**

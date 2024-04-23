@@ -1,4 +1,4 @@
-#include "../../libs/cSpec/cSpec.h"
+#include "../../libs/cSpec/export/cSpec.h"
 #include "../../src/Vector/headers/vector_base.h"
 
 module(T_vector_base, {
