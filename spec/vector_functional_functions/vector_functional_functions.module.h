@@ -1,5 +1,5 @@
 #include "../../libs/cSpec/export/cSpec.h"
-#include "../../src/Vector/headers/vector_functional_functions.h"
+#include "../../src/vector_functional_functions/vector_functional_functions.h"
 
 vector *vec;
 static void setup_vector(void) {
@@ -24,7 +24,7 @@ module(T_vector_functional_functions, {
     before_each(&setup_vector);
 
     it("tries to map an empty vector", {
-      vector *empty = vector_new();
+      vector *empty   = vector_new();
       vector *empty_m = vector_map(empty, (vector_lambda1)double_item);
       assert_that_int(vector_length(empty_m) equals to 0);
     });
@@ -41,12 +41,14 @@ module(T_vector_functional_functions, {
 
     it("tries to filter out an empty vector", {
       vector *empty = vector_new();
-      vector *empty_f = vector_filter(empty, (vector_lambda1)greater_than_three);
+      vector *empty_f =
+        vector_filter(empty, (vector_lambda1)greater_than_three);
       assert_that_int(vector_length(empty_f) equals to 0);
     });
 
     it("filters out numbers greater than 3", {
-      vector *filtered_v = vector_filter(vec, (vector_lambda1)greater_than_three);
+      vector *filtered_v =
+        vector_filter(vec, (vector_lambda1)greater_than_three);
       assert_that_int(vector_length(filtered_v) equals to 3);
       assert_that_int(vector_get(filtered_v, 0) equals to 1);
       assert_that_int(vector_get(filtered_v, 1) equals to 2);
@@ -55,12 +57,14 @@ module(T_vector_functional_functions, {
 
     it("tries to select from an empty vector", {
       vector *empty = vector_new();
-      vector *empty_f = vector_select(empty, (vector_lambda1)greater_than_three);
+      vector *empty_f =
+        vector_select(empty, (vector_lambda1)greater_than_three);
       assert_that_int(vector_length(empty_f) equals to 0);
     });
 
     it("selects numbers greater than 3", {
-      vector *filtered_v = vector_select(vec, (vector_lambda1)greater_than_three);
+      vector *filtered_v =
+        vector_select(vec, (vector_lambda1)greater_than_three);
       assert_that_int(vector_length(filtered_v) equals to 2);
       assert_that_int(vector_get(filtered_v, 0) equals to 4);
       assert_that_int(vector_get(filtered_v, 1) equals to 5);
@@ -77,28 +81,33 @@ module(T_vector_functional_functions, {
       assert_that_int(reduced equals to 15);
     });
 
-    it("maps to the double, filters positives and reduces to the sum of elements", {
-      vector *testv = vector_new();
-      vector_add(testv, 1);
-      vector_add(testv, 2);
-      vector_add(testv, -3);
-      vector_add(testv, -4);
-      vector_add(testv, 5);
-      vector_add(testv, -1);
-      vector_add(testv, -2);
-      vector_add(testv, 3);
-      vector_add(testv, 4);
-      vector_add(testv, -5);
+    it(
+      "maps to the double, filters positives and reduces to the sum of "
+      "elements",
+      {
+        vector *testv = vector_new();
+        vector_add(testv, 1);
+        vector_add(testv, 2);
+        vector_add(testv, -3);
+        vector_add(testv, -4);
+        vector_add(testv, 5);
+        vector_add(testv, -1);
+        vector_add(testv, -2);
+        vector_add(testv, 3);
+        vector_add(testv, 4);
+        vector_add(testv, -5);
 
-      vector *double_testv = vector_map(testv, (vector_lambda1)double_item);
-      vector *positive_double_testv = vector_select(double_testv, (vector_lambda1)positive_filter);
-      int sum = vector_reduce(positive_double_testv, (vector_lambda2)adder);
-      assert_that_int(sum equals to 30);
-    });
+        vector *double_testv = vector_map(testv, (vector_lambda1)double_item);
+        vector *positive_double_testv =
+          vector_select(double_testv, (vector_lambda1)positive_filter);
+        int sum = vector_reduce(positive_double_testv, (vector_lambda2)adder);
+        assert_that_int(sum equals to 30);
+      }
+    );
 
     it("tries to check for all elements on an empty vector", {
       vector *empty = vector_new();
-      bool res = vector_all(empty, (vector_lambda2)adder);
+      bool res      = vector_all(empty, (vector_lambda2)adder);
       assert_that(res is false);
     });
 
@@ -126,7 +135,7 @@ module(T_vector_functional_functions, {
 
     it("tries to check for any elements on an empty vector", {
       vector *empty = vector_new();
-      bool res = vector_any(empty, (vector_lambda2)adder);
+      bool res      = vector_any(empty, (vector_lambda2)adder);
       assert_that(res is false);
     });
 
@@ -154,7 +163,7 @@ module(T_vector_functional_functions, {
 
     it("tries to check for none of the elements on an empty vector", {
       vector *empty = vector_new();
-      bool res = vector_none(empty, (vector_lambda2)adder);
+      bool res      = vector_none(empty, (vector_lambda2)adder);
 
       /* Should be true */
       assert_that(res is true);

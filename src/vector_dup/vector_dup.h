@@ -1,7 +1,7 @@
 #ifndef __VECTOR_DUP_H_
 #define __VECTOR_DUP_H_
 
-#include "vector_base.h"
+#include "../vector_base/vector_base.h"
 
 /**
  * @func: vector_dup

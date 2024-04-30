@@ -1,7 +1,7 @@
 #include "../../libs/cSpec/export/cSpec.h"
-#include "../../src/Vector/headers/vector_dup.h"
+#include "../../src/vector_dup/vector_dup.h"
 
-vector *v = NULL;
+vector *v   = NULL;
 vector *dup = NULL;
 
 static void initialize_vectors(void) {
@@ -17,7 +17,7 @@ module(T_vector_dup, {
     before_each(&initialize_vectors);
 
     it("copies an empty vector", {
-      vector *empty = vector_new();
+      vector *empty     = vector_new();
       vector *empty_dup = vector_dup(empty);
       assert_that_int(vector_length(empty) equals to 0);
       assert_that_int(vector_length(empty_dup) equals to 0);

@@ -9,7 +9,8 @@ static const size_t vector_init_capacity = 32;
 /**
  * @struct: vector
  * @desc: Defines a vector data structure
- * @param items -> A void pointer array that contains the heterogenous elements of the vector
+ * @param items -> A void pointer array that contains the heterogenous elements
+ *of the vector
  * @param alloced -> The total capacity of the vector
  * @param size -> The total number of values
  **/

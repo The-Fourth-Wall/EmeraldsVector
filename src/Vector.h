@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 
-#include "Vector/headers/vector_base.h"
-#include "Vector/headers/vector_dup.h"
-#include "Vector/headers/vector_functional_functions.h"
+#include "vector_base/vector_base.h"
+#include "vector_dup/vector_dup.h"
+#include "vector_functional_functions/vector_functional_functions.h"
 
 #endif

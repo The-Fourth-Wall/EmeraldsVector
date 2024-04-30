@@ -1,8 +1,8 @@
 #ifndef __VECTOR_FUNCTIONAL_FUNCTIONS_H_
 #define __VECTOR_FUNCTIONAL_FUNCTIONS_H_
 
-#include "../../../libs/Bool/export/Bool.h"
-#include "vector_base.h"
+#include "../../libs/Bool/export/Bool.h"
+#include "../vector_base/vector_base.h"
 
 /**
  * @func: vector_lambda
@@ -10,16 +10,18 @@
  * @param -> An element belonging to an iterable
  * @return -> A value that satisfies the callee's purpose (map, filter, reduce)
  **/
-/* The param void* can have more than 1 argument stored as a list of some sort */
+/* The param void* can have more than 1 argument stored as a list of some sort
+ */
 /* Since this is completely generic we can't check for validity of arguments */
 /* The validity of the function is dependent on the callee */
-typedef void* (*vector_lambda0)(void);
-typedef void* (*vector_lambda1)(void*);
-typedef void* (*vector_lambda2)(void*, void*);
+typedef void *(*vector_lambda0)(void);
+typedef void *(*vector_lambda1)(void *);
+typedef void *(*vector_lambda2)(void *, void *);
 
 /**
  * @func: vector_map
- * @desc: Maps all vector elements in iteration using a modifier function pointer
+ * @desc: Maps all vector elements in iteration using a modifier function
+ *pointer
  * @param v -> The vector to map
  * @param modifier -> The modifier function
  * @return The mapped vector duplicate
