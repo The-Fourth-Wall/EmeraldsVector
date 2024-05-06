@@ -1,4 +1,4 @@
-# Vector
+# EmeraldsVector
 
 A dynamic list using fast memory management (golden ratio increase)
 
@@ -14,13 +14,12 @@ A dynamic list using fast memory management (golden ratio increase)
 
 - Include in a file
 
-`touch test.c`
-
 ```c
-#include "export/Vector.h"
+#include "EmeraldsVector.h"
+
 int main(void) {
   /* Create a new vector object */
-  vector *v = vector_new();
+  EmeraldsVector *v = vector_new();
 
   /* Add a void* value into the vector */
   vector_add(v, (void*)1);
@@ -31,10 +30,6 @@ int main(void) {
 }
 ```
 
-- Compile
-
-`clang test.c export/*.*o`
-
 ## Development
 
 - Provide a custom free function pointer for specific deallocations
@@ -43,7 +38,7 @@ int main(void) {
 
 ## Contributing
 
-1. Fork it (<https://github.com/EmeraldsFramework/Vector/fork>)
+1. Fork it (<https://github.com/Oblivious-Oblivious/EmeraldsVector/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -51,4 +46,4 @@ int main(void) {
 
 ## Contributors
 
-- [Oblivious](https://github.com/Oblivious-Oblivious) - creator and maintainer
+- [oblivious](https://github.com/Oblivious-Oblivious) - creator and maintainer

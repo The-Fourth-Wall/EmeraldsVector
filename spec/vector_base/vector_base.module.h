@@ -3,7 +3,7 @@
 
 module(T_vector_base, {
   describe("vector", {
-    vector *v;
+    EmeraldsVector *v;
     int a, b, c;
 
     before({
@@ -42,7 +42,7 @@ module(T_vector_base, {
     });
 
     it("counts the length correctly on additions and deletions", {
-      vector *vv = vector_new();
+      EmeraldsVector *vv = vector_new();
 
       assert_that_int(vector_length(vv) equals to 0);
       vector_add(vv, 42);

@@ -2,8 +2,8 @@
 
 #include "../vector_base/vector_base.h"
 
-vector *vector_dup(vector *self) {
-  vector *dup = NULL;
+EmeraldsVector *vector_dup(EmeraldsVector *self) {
+  EmeraldsVector *dup = NULL;
   size_t i;
   size_t vlen;
 

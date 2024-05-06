@@ -2,8 +2,9 @@
 
 #include "../vector_base/vector_base.h"
 
-vector *vector_map(vector *self, vector_lambda1 modifier) {
-  vector *dup = NULL;
+EmeraldsVector *
+vector_map(EmeraldsVector *self, EmeraldsVectorLambda1 modifier) {
+  EmeraldsVector *dup = NULL;
   size_t i;
   size_t vlen;
 
@@ -15,7 +16,8 @@ vector *vector_map(vector *self, vector_lambda1 modifier) {
 
   vlen = vector_length(self);
   for(i = 0; i < vlen; i++) {
-    /* Pass each element through the modifier and add it to the new vector */
+    /* Pass each element through the modifier and add it to the new
+     * EmeraldsVector */
     vector_add(dup, modifier(vector_get(self, i)));
   }
 
@@ -24,8 +26,9 @@ vector *vector_map(vector *self, vector_lambda1 modifier) {
   return dup;
 }
 
-vector *vector_filter(vector *self, vector_lambda1 filter) {
-  vector *dup = NULL;
+EmeraldsVector *
+vector_filter(EmeraldsVector *self, EmeraldsVectorLambda1 filter) {
+  EmeraldsVector *dup = NULL;
   size_t i;
 
   if(self == NULL || filter == NULL) {
@@ -36,7 +39,7 @@ vector *vector_filter(vector *self, vector_lambda1 filter) {
 
   for(i = 0; i < vector_length(self); i++) {
     void *item = vector_get(self, i);
-    /* If the item passes the filter it gets added to the dup vector */
+    /* If the item passes the filter it gets added to the dup EmeraldsVector */
     if(!filter(item)) {
       vector_add(dup, item);
     }
@@ -47,8 +50,9 @@ vector *vector_filter(vector *self, vector_lambda1 filter) {
   return dup;
 }
 
-vector *vector_select(vector *self, vector_lambda1 selector) {
-  vector *dup = NULL;
+EmeraldsVector *
+vector_select(EmeraldsVector *self, EmeraldsVectorLambda1 selector) {
+  EmeraldsVector *dup = NULL;
   size_t i;
 
   if(self == NULL || selector == NULL) {
@@ -59,7 +63,7 @@ vector *vector_select(vector *self, vector_lambda1 selector) {
 
   for(i = 0; i < vector_length(self); i++) {
     void *item = vector_get(self, i);
-    /* If the item gets selected it gets added to the dup vector */
+    /* If the item gets selected it gets added to the dup EmeraldsVector */
     if(selector(item)) {
       vector_add(dup, item);
     }
@@ -70,7 +74,7 @@ vector *vector_select(vector *self, vector_lambda1 selector) {
   return dup;
 }
 
-void *vector_reduce(vector *self, vector_lambda2 fold) {
+void *vector_reduce(EmeraldsVector *self, EmeraldsVectorLambda2 fold) {
   void *accumulator = NULL;
   size_t i;
   size_t vlen;
@@ -93,7 +97,7 @@ void *vector_reduce(vector *self, vector_lambda2 fold) {
   return accumulator;
 }
 
-bool vector_all(vector *self, vector_lambda1 checker) {
+bool vector_all(EmeraldsVector *self, EmeraldsVectorLambda1 checker) {
   size_t i;
 
   if(self == NULL || checker == NULL || vector_length(self) == 0) {
@@ -102,7 +106,7 @@ bool vector_all(vector *self, vector_lambda1 checker) {
 
   for(i = 0; i < vector_length(self); i++) {
     void *item = vector_get(self, i);
-    /* If the item gets selected it gets added to the dup vector */
+    /* If the item gets selected it gets added to the dup EmeraldsVector */
     if(!checker(item)) {
       return false;
     }
@@ -111,7 +115,7 @@ bool vector_all(vector *self, vector_lambda1 checker) {
   return true;
 }
 
-bool vector_any(vector *self, vector_lambda1 checker) {
+bool vector_any(EmeraldsVector *self, EmeraldsVectorLambda1 checker) {
   size_t i;
 
   if(self == NULL || checker == NULL) {
@@ -120,7 +124,7 @@ bool vector_any(vector *self, vector_lambda1 checker) {
 
   for(i = 0; i < vector_length(self); i++) {
     void *item = vector_get(self, i);
-    /* If the item gets selected it gets added to the dup vector */
+    /* If the item gets selected it gets added to the dup EmeraldsVector */
     if(checker(item)) {
       return true;
     }
@@ -129,7 +133,7 @@ bool vector_any(vector *self, vector_lambda1 checker) {
   return false;
 }
 
-bool vector_none(vector *self, vector_lambda1 checker) {
+bool vector_none(EmeraldsVector *self, EmeraldsVectorLambda1 checker) {
   size_t i;
 
   if(self == NULL || checker == NULL) {
@@ -138,7 +142,7 @@ bool vector_none(vector *self, vector_lambda1 checker) {
 
   for(i = 0; i < vector_length(self); i++) {
     void *item = vector_get(self, i);
-    /* If the item gets selected it gets added to the dup vector */
+    /* If the item gets selected it gets added to the dup EmeraldsVector */
     if(checker(item)) {
       return false;
     }

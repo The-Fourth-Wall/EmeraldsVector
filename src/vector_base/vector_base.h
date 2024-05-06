@@ -1,5 +1,5 @@
-#ifndef __VECTOR_BASE_H_
-#define __VECTOR_BASE_H_
+#ifndef __EMERALDS_VECTOR_BASE_H_
+#define __EMERALDS_VECTOR_BASE_H_
 
 #include <stdlib.h> /* malloc, calloc, realloc, free */
 
@@ -7,77 +7,69 @@
 static const size_t vector_init_capacity = 32;
 
 /**
- * @struct: vector
- * @desc: Defines a vector data structure
+ * @brief Defines a vector data structure
  * @param items -> A void pointer array that contains the heterogenous elements
  *of the vector
  * @param alloced -> The total capacity of the vector
  * @param size -> The total number of values
  **/
-typedef struct vector {
+typedef struct EmeraldsVector {
   /* TODO -> USE A TYPED UNION INSTEAD OF VOID POINTERS */
   void **items;
   size_t alloced;
   size_t size;
-} vector;
+} EmeraldsVector;
 
 /**
- * @func: vector_new
- * @desc: Initializes a vector data structure
+ * @brief Initializes a vector data structure
  * @return: The newly created vector
  **/
-vector *vector_new(void);
+EmeraldsVector *vector_new(void);
 
 /**
- * @func: vector_add
- * @desc: Adds a new element in the vector
+ * @brief Adds a new element in the vector
  * @param v -> The vector to use
  * @param item -> The item to add
  * @return The modified vector
  **/
-vector *vector_add(vector *self, void *item);
+EmeraldsVector *vector_add(EmeraldsVector *self, void *item);
 
 /**
- * @func: vector_set
- * @desc: Set the value of a specific vector index to a new one
+ * @brief Set the value of a specific vector index to a new one
  * @param self-> The vector
  * @param index -> The index to set the value of
  * @param item -> The item to set the value as
  * @return The modified vector
  **/
-vector *vector_set(vector *self, size_t index, void *item);
+EmeraldsVector *vector_set(EmeraldsVector *self, size_t index, void *item);
 
 /**
- * @func: vector_get
- * @desc: Get the value of a specific vector index
+ * @brief Get the value of a specific vector index
  * @param self -> The vector to use
  * @param index -> The index to get the value of
  * @return The value
  **/
-void *vector_get(vector *self, size_t index);
+void *vector_get(EmeraldsVector *self, size_t index);
 
 /**
- * @func: vector_delete
- * @desc: Delete a specific vector value by index
+ * @brief Delete a specific vector value by index
  * @param self -> The vector to use
  * @param index -> The index to delete
  * @return The modified vector
  **/
-vector *vector_delete(vector *self, size_t index);
+EmeraldsVector *vector_delete(EmeraldsVector *self, size_t index);
 
 /**
- * @func: vector_length
- * @desc: Get the total number of values inserted in the vector
+ * @brief Get the total number of values inserted in the vector
  * @param self -> The vector to use
  * @return: The number of items in the vector
  **/
-size_t vector_length(vector *self);
+size_t vector_length(EmeraldsVector *self);
 
 /**
- * @func: vector_free
  * @brief Frees the memory of the vector
  * @param self -> The vector to free
  */
-void vector_free(vector *self);
+void vector_free(EmeraldsVector *self);
 
 #endif

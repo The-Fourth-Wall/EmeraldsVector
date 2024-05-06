@@ -3,12 +3,11 @@
 #define GOLDEN_MEAN 1.618
 
 /**
- * @func: vector_ensure_space
- * @desc: Ensure there is enough space for our values in the vector
+ * @brief Ensure there is enough space for our values in the vector
  * @param self -> The vector to use
  * @param capacity -> The new capacity to set
  **/
-static void vector_ensure_space(vector *self, size_t capacity) {
+static void vector_ensure_space(EmeraldsVector *self, size_t capacity) {
   void **items = NULL;
 
   if(self == NULL || capacity == 0) {
@@ -25,15 +24,15 @@ static void vector_ensure_space(vector *self, size_t capacity) {
   }
 }
 
-vector *vector_new(void) {
-  vector *self  = (vector *)malloc(sizeof(vector));
-  self->alloced = vector_init_capacity;
-  self->size    = 0;
-  self->items   = (void **)malloc(sizeof(void *) * self->alloced);
+EmeraldsVector *vector_new(void) {
+  EmeraldsVector *self = (EmeraldsVector *)malloc(sizeof(EmeraldsVector));
+  self->alloced        = vector_init_capacity;
+  self->size           = 0;
+  self->items          = (void **)malloc(sizeof(void *) * self->alloced);
   return self;
 }
 
-vector *vector_add(vector *self, void *item) {
+EmeraldsVector *vector_add(EmeraldsVector *self, void *item) {
   /* TODO We allow NULL elements (NOT TESTED) */
   if(self == NULL) {
     return self;
@@ -46,7 +45,7 @@ vector *vector_add(vector *self, void *item) {
   return self;
 }
 
-vector *vector_set(vector *self, size_t index, void *item) {
+EmeraldsVector *vector_set(EmeraldsVector *self, size_t index, void *item) {
   if(self == NULL) {
     return self;
   }
@@ -57,7 +56,7 @@ vector *vector_set(vector *self, size_t index, void *item) {
   return self;
 }
 
-void *vector_get(vector *self, size_t index) {
+void *vector_get(EmeraldsVector *self, size_t index) {
   if(self == NULL) {
     return NULL;
   }
@@ -69,7 +68,7 @@ void *vector_get(vector *self, size_t index) {
   return NULL;
 }
 
-vector *vector_delete(vector *self, size_t index) {
+EmeraldsVector *vector_delete(EmeraldsVector *self, size_t index) {
   size_t i;
   size_t vlen;
 
@@ -98,14 +97,14 @@ vector *vector_delete(vector *self, size_t index) {
   return self;
 }
 
-size_t vector_length(vector *self) {
+size_t vector_length(EmeraldsVector *self) {
   if(self == NULL) {
     return 0;
   }
   return self->size;
 }
 
-void vector_free(vector *self) {
+void vector_free(EmeraldsVector *self) {
   /* TODO -> IMPLEMENT A CUSTOM FREE METHOD FOR ARRAY ELEMENTS */
   if(self != NULL && self->items != NULL) {
     free(self->items);
