@@ -624,6 +624,13 @@ void *vector_get(EmeraldsVector *self, size_t index);
 EmeraldsVector *vector_remove(EmeraldsVector *self, size_t index);
 
 /**
+ * @brief Deletes the last elemnt of the vector
+ * @param self -> The vector to use
+ * @return The modified vector
+ **/
+EmeraldsVector *vector_remove_last(EmeraldsVector *self);
+
+/**
  * @brief Get the total number of values inserted in the vector
  * @param self -> The vector to use
  * @return: The number of items in the vector

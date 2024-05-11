@@ -113,6 +113,11 @@ EmeraldsVector *vector_remove(EmeraldsVector *self, size_t index) {
   return self;
 }
 
+EmeraldsVector *vector_remove_last(EmeraldsVector *self) {
+  vector_remove(self, self->size - 1);
+  return self;
+}
+
 size_t vector_size(EmeraldsVector *self) {
   if(self == NULL) {
     return 0;
