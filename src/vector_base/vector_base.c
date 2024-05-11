@@ -84,7 +84,7 @@ void *vector_get(EmeraldsVector *self, size_t index) {
   return NULL;
 }
 
-EmeraldsVector *vector_delete(EmeraldsVector *self, size_t index) {
+EmeraldsVector *vector_remove(EmeraldsVector *self, size_t index) {
   size_t i;
   size_t vlen;
 

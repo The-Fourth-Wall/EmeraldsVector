@@ -19,7 +19,7 @@
       "opt": "-Og -g",
       "version": "-std=c99",
       "flags": "-Wall -Wextra -Werror -pedantic -pedantic-errors -Wpedantic",
-      "warnings": "-Wno-int-conversion",
+      "warnings": "",
       "libs": ""
     },
     "release": {

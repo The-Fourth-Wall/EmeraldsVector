@@ -30,9 +30,9 @@ module(T_vector_dup, {
     });
 
     it("ensures the memory duplicate is a deep copy", {
-      vector_delete(v, 1);
-      vector_delete(v, 2);
-      vector_delete(dup, 0);
+      vector_remove(v, 1);
+      vector_remove(v, 2);
+      vector_remove(dup, 0);
 
       assert_that_int(vector_get(v, 0) equals to 1);
       assert_that_int(vector_size(dup) equals to 2);

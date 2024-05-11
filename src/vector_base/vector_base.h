@@ -621,7 +621,7 @@ void *vector_get(EmeraldsVector *self, size_t index);
  * @param index -> The index to delete
  * @return The modified vector
  **/
-EmeraldsVector *vector_delete(EmeraldsVector *self, size_t index);
+EmeraldsVector *vector_remove(EmeraldsVector *self, size_t index);
 
 /**
  * @brief Get the total number of values inserted in the vector
