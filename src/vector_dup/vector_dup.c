@@ -11,10 +11,10 @@ EmeraldsVector *vector_dup(EmeraldsVector *self) {
     return NULL;
   }
 
-  dup = vector_new();
+  dup = vector_new_empty();
 
   /* Iteratively copy the vector items from one memory location to another */
-  vlen = vector_length(self);
+  vlen = vector_size(self);
   for(i = 0; i < vlen; i++) {
     vector_add(dup, vector_get(self, i));
   }

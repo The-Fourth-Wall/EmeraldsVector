@@ -2,7 +2,7 @@ NAME = test
 
 CC = clang
 OPT = -O2
-VERSION = -std=c89
+VERSION = -std=c99
 OUTPUT = a.out
 
 FLAGS = -Wall -Wextra -Werror -pedantic -pedantic-errors -Wpedantic

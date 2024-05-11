@@ -14,7 +14,7 @@ module(T_vector_base, {
     });
 
     it("creates a new vector", {
-      v = vector_new();
+      v = vector_new_empty();
       assert_that(v isnot NULL);
     });
 
@@ -22,7 +22,12 @@ module(T_vector_base, {
       vector_add(v, a);
       vector_add(v, b);
       vector_add(v, c);
-      assert_that_int(vector_length(v) equals to 3);
+      assert_that_int(vector_size(v) equals to 3);
+    });
+
+    it("creates a new vector with initial elements", {
+      v = vector_new(a, b, c);
+      assert_that_int(vector_size(v) equals to 3);
     });
 
     it("peeks the second element of the vector", {
@@ -36,24 +41,24 @@ module(T_vector_base, {
 
     it("deletes the second element on the vector", {
       vector_delete(v, 1);
-      assert_that_int(vector_length(v) equals to 2);
+      assert_that_int(vector_size(v) equals to 2);
       assert_that_int(vector_get(v, 0) equals to a);
       assert_that_int(vector_get(v, 1) equals to c * 2);
     });
 
     it("counts the length correctly on additions and deletions", {
-      EmeraldsVector *vv = vector_new();
+      EmeraldsVector *vv = vector_new_empty();
 
-      assert_that_int(vector_length(vv) equals to 0);
+      assert_that_int(vector_size(vv) equals to 0);
       vector_add(vv, 42);
       vector_add(vv, 43);
-      assert_that_int(vector_length(vv) equals to 2);
+      assert_that_int(vector_size(vv) equals to 2);
       vector_add(vv, "one");
       vector_delete(vv, 1);
-      assert_that_int(vector_length(vv) equals to 2);
+      assert_that_int(vector_size(vv) equals to 2);
       vector_delete(vv, 0);
       vector_delete(vv, 0);
-      assert_that_int(vector_length(vv) equals to 0);
+      assert_that_int(vector_size(vv) equals to 0);
     });
 
     it("frees vector items without error", {
@@ -61,4 +66,4 @@ module(T_vector_base, {
       assert_that(true is true);
     });
   });
-});
+})

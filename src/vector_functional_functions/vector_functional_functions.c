@@ -12,9 +12,9 @@ vector_map(EmeraldsVector *self, EmeraldsVectorLambda1 modifier) {
     return NULL;
   }
 
-  dup = vector_new();
+  dup = vector_new_empty();
 
-  vlen = vector_length(self);
+  vlen = vector_size(self);
   for(i = 0; i < vlen; i++) {
     /* Pass each element through the modifier and add it to the new
      * EmeraldsVector */
@@ -35,9 +35,9 @@ vector_filter(EmeraldsVector *self, EmeraldsVectorLambda1 filter) {
     return NULL;
   }
 
-  dup = vector_new();
+  dup = vector_new_empty();
 
-  for(i = 0; i < vector_length(self); i++) {
+  for(i = 0; i < vector_size(self); i++) {
     void *item = vector_get(self, i);
     /* If the item passes the filter it gets added to the dup EmeraldsVector */
     if(!filter(item)) {
@@ -59,9 +59,9 @@ vector_select(EmeraldsVector *self, EmeraldsVectorLambda1 selector) {
     return NULL;
   }
 
-  dup = vector_new();
+  dup = vector_new_empty();
 
-  for(i = 0; i < vector_length(self); i++) {
+  for(i = 0; i < vector_size(self); i++) {
     void *item = vector_get(self, i);
     /* If the item gets selected it gets added to the dup EmeraldsVector */
     if(selector(item)) {
@@ -87,7 +87,7 @@ void *vector_reduce(EmeraldsVector *self, EmeraldsVectorLambda2 fold) {
       with the accumulation of the vector elements */
   accumulator = vector_get(self, 0);
 
-  vlen = vector_length(self);
+  vlen = vector_size(self);
   for(i = 1; i < vlen; i++) {
     /* Accumulate the current item */
     void *current = vector_get(self, i);
@@ -100,11 +100,11 @@ void *vector_reduce(EmeraldsVector *self, EmeraldsVectorLambda2 fold) {
 bool vector_all(EmeraldsVector *self, EmeraldsVectorLambda1 checker) {
   size_t i;
 
-  if(self == NULL || checker == NULL || vector_length(self) == 0) {
+  if(self == NULL || checker == NULL || vector_size(self) == 0) {
     return false;
   }
 
-  for(i = 0; i < vector_length(self); i++) {
+  for(i = 0; i < vector_size(self); i++) {
     void *item = vector_get(self, i);
     /* If the item gets selected it gets added to the dup EmeraldsVector */
     if(!checker(item)) {
@@ -122,7 +122,7 @@ bool vector_any(EmeraldsVector *self, EmeraldsVectorLambda1 checker) {
     return false;
   }
 
-  for(i = 0; i < vector_length(self); i++) {
+  for(i = 0; i < vector_size(self); i++) {
     void *item = vector_get(self, i);
     /* If the item gets selected it gets added to the dup EmeraldsVector */
     if(checker(item)) {
@@ -140,7 +140,7 @@ bool vector_none(EmeraldsVector *self, EmeraldsVectorLambda1 checker) {
     return false;
   }
 
-  for(i = 0; i < vector_length(self); i++) {
+  for(i = 0; i < vector_size(self); i++) {
     void *item = vector_get(self, i);
     /* If the item gets selected it gets added to the dup EmeraldsVector */
     if(checker(item)) {

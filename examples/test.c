@@ -11,19 +11,7 @@ int main(void) {
   long sum;
 
   printf("TESTING VECTOR MAP FILTER REDUCE\n");
-  testv = vector_new();
-
-  vector_add(testv, (void *)1);
-  vector_add(testv, (void *)2);
-  vector_add(testv, (void *)-3);
-  vector_add(testv, (void *)-4);
-  vector_add(testv, (void *)5);
-  vector_add(testv, (void *)-1);
-  vector_add(testv, (void *)-2);
-  vector_add(testv, (void *)3);
-  vector_add(testv, (void *)4);
-  vector_add(testv, (void *)-5);
-
+  testv = vector_new(1, 2, -3, -4, 5, -1, -2, 3, 4, -5);
   testv = vector_map(testv, (EmeraldsVectorLambda1)double_item);
   testv = vector_select(testv, (EmeraldsVectorLambda1)positive_filter);
   sum   = (long)vector_reduce(testv, (EmeraldsVectorLambda2)adder);

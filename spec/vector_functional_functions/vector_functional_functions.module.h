@@ -2,14 +2,7 @@
 #include "../../src/vector_functional_functions/vector_functional_functions.h"
 
 EmeraldsVector *vec;
-static void setup_vector(void) {
-  vec = vector_new();
-  vector_add(vec, (void *)1);
-  vector_add(vec, (void *)2);
-  vector_add(vec, (void *)3);
-  vector_add(vec, (void *)4);
-  vector_add(vec, (void *)5);
-}
+static void setup_vector(void) { vec = vector_new(1, 2, 3, 4, 5); }
 
 static int double_item(int item) { return item * 2; }
 
@@ -24,16 +17,16 @@ module(T_vector_functional_functions, {
     before_each(&setup_vector);
 
     it("tries to map an empty vector", {
-      EmeraldsVector *empty = vector_new();
+      EmeraldsVector *empty = vector_new_empty();
       EmeraldsVector *empty_m =
         vector_map(empty, (EmeraldsVectorLambda1)double_item);
-      assert_that_int(vector_length(empty_m) equals to 0);
+      assert_that_int(vector_size(empty_m) equals to 0);
     });
 
     it("maps an vector of integers its double values", {
       EmeraldsVector *mapped_v =
         vector_map(vec, (EmeraldsVectorLambda1)double_item);
-      assert_that_int(vector_length(mapped_v) equals to 5);
+      assert_that_int(vector_size(mapped_v) equals to 5);
       assert_that_int(vector_get(mapped_v, 0) equals to 2);
       assert_that_int(vector_get(mapped_v, 1) equals to 4);
       assert_that_int(vector_get(mapped_v, 2) equals to 6);
@@ -42,38 +35,38 @@ module(T_vector_functional_functions, {
     });
 
     it("tries to filter out an empty vector", {
-      EmeraldsVector *empty = vector_new();
+      EmeraldsVector *empty = vector_new_empty();
       EmeraldsVector *empty_f =
         vector_filter(empty, (EmeraldsVectorLambda1)greater_than_three);
-      assert_that_int(vector_length(empty_f) equals to 0);
+      assert_that_int(vector_size(empty_f) equals to 0);
     });
 
     it("filters out numbers greater than 3", {
       EmeraldsVector *filtered_v =
         vector_filter(vec, (EmeraldsVectorLambda1)greater_than_three);
-      assert_that_int(vector_length(filtered_v) equals to 3);
+      assert_that_int(vector_size(filtered_v) equals to 3);
       assert_that_int(vector_get(filtered_v, 0) equals to 1);
       assert_that_int(vector_get(filtered_v, 1) equals to 2);
       assert_that_int(vector_get(filtered_v, 2) equals to 3);
     });
 
     it("tries to select from an empty vector", {
-      EmeraldsVector *empty = vector_new();
+      EmeraldsVector *empty = vector_new_empty();
       EmeraldsVector *empty_f =
         vector_select(empty, (EmeraldsVectorLambda1)greater_than_three);
-      assert_that_int(vector_length(empty_f) equals to 0);
+      assert_that_int(vector_size(empty_f) equals to 0);
     });
 
     it("selects numbers greater than 3", {
       EmeraldsVector *filtered_v =
         vector_select(vec, (EmeraldsVectorLambda1)greater_than_three);
-      assert_that_int(vector_length(filtered_v) equals to 2);
+      assert_that_int(vector_size(filtered_v) equals to 2);
       assert_that_int(vector_get(filtered_v, 0) equals to 4);
       assert_that_int(vector_get(filtered_v, 1) equals to 5);
     });
 
     it("tries to reduce an empty vector", {
-      EmeraldsVector *empty = vector_new();
+      EmeraldsVector *empty = vector_new_empty();
       void *empty_r = vector_reduce(empty, (EmeraldsVectorLambda2)adder);
       assert_that(empty_r is NULL);
     });
@@ -87,17 +80,7 @@ module(T_vector_functional_functions, {
       "maps to the double, filters positives and reduces to the sum of "
       "elements",
       {
-        EmeraldsVector *testv = vector_new();
-        vector_add(testv, 1);
-        vector_add(testv, 2);
-        vector_add(testv, -3);
-        vector_add(testv, -4);
-        vector_add(testv, 5);
-        vector_add(testv, -1);
-        vector_add(testv, -2);
-        vector_add(testv, 3);
-        vector_add(testv, 4);
-        vector_add(testv, -5);
+        EmeraldsVector *testv = vector_new(1, 2, -3, -4, 5, -1, -2, 3, 4, -5);
 
         EmeraldsVector *double_testv =
           vector_map(testv, (EmeraldsVectorLambda1)double_item);
@@ -110,63 +93,43 @@ module(T_vector_functional_functions, {
     );
 
     it("tries to check for all elements on an empty vector", {
-      EmeraldsVector *empty = vector_new();
+      EmeraldsVector *empty = vector_new_empty();
       bool res              = vector_all(empty, (EmeraldsVectorLambda2)adder);
       assert_that(res is false);
     });
 
     it("checks that all elements are greater than 3", {
-      EmeraldsVector *testv = vector_new();
-      vector_add(testv, 5);
-      vector_add(testv, 7);
-      vector_add(testv, 12);
-      vector_add(testv, 6);
-
+      EmeraldsVector *testv = vector_new(5, 7, 12, 6);
       bool res = vector_all(testv, (EmeraldsVectorLambda1)greater_than_three);
       assert_that(res is true);
     });
 
     it("fails on the check that all elements are greater than 3", {
-      EmeraldsVector *testv = vector_new();
-      vector_add(testv, 5);
-      vector_add(testv, 3);
-      vector_add(testv, 12);
-      vector_add(testv, 6);
-
+      EmeraldsVector *testv = vector_new(5, 3, 12, 6);
       bool res = vector_all(testv, (EmeraldsVectorLambda1)greater_than_three);
       assert_that(res is false);
     });
 
     it("tries to check for any elements on an empty vector", {
-      EmeraldsVector *empty = vector_new();
+      EmeraldsVector *empty = vector_new_empty();
       bool res              = vector_any(empty, (EmeraldsVectorLambda2)adder);
       assert_that(res is false);
     });
 
     it("checks if any element is greater than 3", {
-      EmeraldsVector *testv = vector_new();
-      vector_add(testv, 5);
-      vector_add(testv, 7);
-      vector_add(testv, 12);
-      vector_add(testv, 6);
-
+      EmeraldsVector *testv = vector_new(5, 7, 12, 6);
       bool res = vector_any(testv, (EmeraldsVectorLambda1)greater_than_three);
       assert_that(res is true);
     });
 
     it("fails on the check if any element is greater than 3", {
-      EmeraldsVector *testv = vector_new();
-      vector_add(testv, 1);
-      vector_add(testv, 3);
-      vector_add(testv, 2);
-      vector_add(testv, 0);
-
+      EmeraldsVector *testv = vector_new(1, 3, 2, 0);
       bool res = vector_any(testv, (EmeraldsVectorLambda1)greater_than_three);
       assert_that(res is false);
     });
 
     it("tries to check for none of the elements on an empty vector", {
-      EmeraldsVector *empty = vector_new();
+      EmeraldsVector *empty = vector_new_empty();
       bool res              = vector_none(empty, (EmeraldsVectorLambda2)adder);
 
       /* Should be true */
@@ -174,25 +137,15 @@ module(T_vector_functional_functions, {
     });
 
     it("checks that none of the elements are greater than 3", {
-      EmeraldsVector *testv = vector_new();
-      vector_add(testv, 5);
-      vector_add(testv, 7);
-      vector_add(testv, 12);
-      vector_add(testv, 6);
-
+      EmeraldsVector *testv = vector_new(5, 7, 12, 6);
       bool res = vector_none(testv, (EmeraldsVectorLambda1)greater_than_three);
       assert_that(res is false);
     });
 
     it("fails on the check that all elements are greater than 3", {
-      EmeraldsVector *testv = vector_new();
-      vector_add(testv, 1);
-      vector_add(testv, 3);
-      vector_add(testv, 2);
-      vector_add(testv, 0);
-
+      EmeraldsVector *testv = vector_new(1, 3, 2, 0);
       bool res = vector_none(testv, (EmeraldsVectorLambda1)greater_than_three);
       assert_that(res is true);
     });
   });
-});
+})

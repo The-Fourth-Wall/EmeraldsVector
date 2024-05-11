@@ -1,5 +1,7 @@
 #include "vector_base.h"
 
+#include <stdarg.h> /* va_start, va_end, va_list, va_arg */
+
 #define GOLDEN_MEAN 1.618
 
 /**
@@ -24,11 +26,25 @@ static void vector_ensure_space(EmeraldsVector *self, size_t capacity) {
   }
 }
 
-EmeraldsVector *vector_new(void) {
+EmeraldsVector *vector_new_empty(void) {
   EmeraldsVector *self = (EmeraldsVector *)malloc(sizeof(EmeraldsVector));
   self->alloced        = vector_init_capacity;
   self->size           = 0;
   self->items          = (void **)malloc(sizeof(void *) * self->alloced);
+  return self;
+}
+
+EmeraldsVector *__internal_vector_new(size_t argc, ...) {
+  EmeraldsVector *self = vector_new_empty();
+
+  va_list vars;
+  va_start(vars, argc)
+    ;
+    for(size_t i = 0; i < argc; i++) {
+      vector_add(self, va_arg(vars, void *));
+    }
+  va_end(vars);
+
   return self;
 }
 
@@ -82,7 +98,7 @@ EmeraldsVector *vector_delete(EmeraldsVector *self, size_t index) {
   self->items[index] = NULL;
 
   /* Reset the rest of the elements forwards */
-  vlen = vector_length(self);
+  vlen = vector_size(self);
   for(i = index; i < vlen - 1; i++) {
     self->items[i]     = self->items[i + 1];
     self->items[i + 1] = NULL;
@@ -97,7 +113,7 @@ EmeraldsVector *vector_delete(EmeraldsVector *self, size_t index) {
   return self;
 }
 
-size_t vector_length(EmeraldsVector *self) {
+size_t vector_size(EmeraldsVector *self) {
   if(self == NULL) {
     return 0;
   }
