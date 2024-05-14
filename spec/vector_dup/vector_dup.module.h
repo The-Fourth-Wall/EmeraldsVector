@@ -1,12 +1,16 @@
 #include "../../libs/cSpec/export/cSpec.h"
-#include "../../src/vector_dup/vector_dup.h"
+#include "../../src/vector_base/vector_base.h"
 
-EmeraldsVector *v   = NULL;
-EmeraldsVector *dup = NULL;
+int *v   = NULL;
+int *dup = NULL;
 
 static void initialize_vectors(void) {
-  v   = vector_new(1, 2, 4);
-  dup = vector_dup(v);
+  vector_free(v);
+  vector_free(dup);
+  vector_add(v, 1);
+  vector_add(v, 2);
+  vector_add(v, 4);
+  vector_dup(v, dup);
 }
 
 module(T_vector_dup, {
@@ -14,8 +18,9 @@ module(T_vector_dup, {
     before_each(&initialize_vectors);
 
     it("copies an empty vector", {
-      EmeraldsVector *empty     = vector_new_empty();
-      EmeraldsVector *empty_dup = vector_dup(empty);
+      int *empty     = NULL;
+      int *empty_dup = NULL;
+      vector_dup(empty, empty_dup);
       assert_that_int(vector_size(empty) equals to 0);
       assert_that_int(vector_size(empty_dup) equals to 0);
       assert_that_int(vector_size(empty) equals to vector_size(empty_dup));
@@ -30,10 +35,11 @@ module(T_vector_dup, {
     });
 
     it("ensures the memory duplicate is a deep copy", {
-      vector_remove(v, 1);
       vector_remove(v, 2);
+      vector_remove(v, 1);
       vector_remove(dup, 0);
 
+      assert_that_int(vector_size(v) equals to 1);
       assert_that_int(vector_get(v, 0) equals to 1);
       assert_that_int(vector_size(dup) equals to 2);
       assert_that_int(vector_get(dup, 0) equals to 2);

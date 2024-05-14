@@ -6,9 +6,9 @@ VERSION = -std=c99
 OUTPUT = a.out
 
 FLAGS = -Wall -Wextra -Werror -pedantic -pedantic-errors -Wpedantic
-WARNINGS = -Wno-unused-function -Wno-strict-prototypes
+WARNINGS = -Wno-unused-function -Wno-strict-prototypes -Wno-int-conversion
 HEADERS =
-LIBS = ../export/*.*o
+LIBS =
 
 INPUT = $(NAME).c
 

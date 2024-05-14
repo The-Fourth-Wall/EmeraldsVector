@@ -1,7 +1,9 @@
 #ifndef __EMERALDS_VECTOR_BASE_H_
 #define __EMERALDS_VECTOR_BASE_H_
 
-#include <stdlib.h> /* malloc, calloc, realloc, free */
+#include <stdarg.h> /* va_list, va_arg, va_start, va_end */
+#include <stdlib.h> /* NULL */
+#include <string.h> /* memmove */
 
 #define VECTOR_PP_256TH_ARG( \
   _1,                        \
@@ -557,55 +559,45 @@
 #define VECTOR_PP_NARG_(...) VECTOR_PP_256TH_ARG(__VA_ARGS__)
 #define VECTOR_PP_NARG(...)  VECTOR_PP_NARG_(__VA_ARGS__, VECTOR_PP_RSEQ_N())
 
-/* Initial capacity of a vector */
-static const size_t vector_init_capacity = 32;
-
-/**
- * @brief Defines a vector data structure
- * @param items -> A void pointer array that contains the heterogenous elements
- *of the vector
- * @param alloced -> The total capacity of the vector
- * @param size -> The total number of values
- **/
-typedef struct EmeraldsVector {
-  /* TODO -> USE A TYPED UNION INSTEAD OF VOID POINTERS */
-  void **items;
-  size_t alloced;
+typedef struct {
   size_t size;
-} EmeraldsVector;
+  size_t capacity;
+} _vector_internal_header;
+
+#define _vector_internal_get_header(t) ((_vector_internal_header *)(t) - 1)
+#define _vector_internal_arrgetcapacity(v) \
+  ((v) ? _vector_internal_get_header(v)->capacity : 0)
+#define _vector_internal_arrgrow(v, b, c) \
+  ((v) = _vector_internal_arrgrowf((v), sizeof *(v), (b), (c)))
+#define _vector_internal_arrmaybegrow(v, n) \
+  _vector_internal_maybe_grow((void **)&(v), sizeof(*(v)), (n))
+
+#ifndef vector_allocator
+  #define vector_allocator realloc
+#endif
 
 /**
- * @brief Initializes an empty vector structure
- * @return: The newly created vector
- **/
-EmeraldsVector *vector_new_empty(void);
-
-/**
- * @brief: Initializes a vector data structure
- * @param argc -> The number of arguments provided by the automation macro
- * @param ... -> Initialization arguments
- * @return: The newly created vector
+ * @brief Macro helper for variadic arguments
  */
-EmeraldsVector *__internal_vector_new(size_t argc, ...);
 #define vector_new(...) \
-  __internal_vector_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
+  _vector_internal_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
 
 /**
  * @brief Adds a new element in the vector
- * @param v -> The vector to use
+ * @param self -> The vector to use
  * @param item -> The item to add
- * @return The modified vector
  **/
-EmeraldsVector *vector_add(EmeraldsVector *self, void *item);
+#define vector_add(self, item)             \
+  (_vector_internal_arrmaybegrow(self, 1), \
+   (self)[_vector_internal_get_header(self)->size++] = (item))
 
 /**
  * @brief Set the value of a specific vector index to a new one
- * @param self-> The vector
+ * @param self -> The vector
  * @param index -> The index to set the value of
  * @param item -> The item to set the value as
- * @return The modified vector
  **/
-EmeraldsVector *vector_set(EmeraldsVector *self, size_t index, void *item);
+#define vector_set(self, index, item) ((self)[index] = (item))
 
 /**
  * @brief Get the value of a specific vector index
@@ -613,34 +605,218 @@ EmeraldsVector *vector_set(EmeraldsVector *self, size_t index, void *item);
  * @param index -> The index to get the value of
  * @return The value
  **/
-void *vector_get(EmeraldsVector *self, size_t index);
+#define vector_get(self, index) (self == NULL ? 0 : (self)[index])
+
+/**
+ * @brief Delete a multiple values from the vector
+ * @param self -> The vector to use
+ * @param index -> The index to start
+ * @param n -> The number of elements to delete
+ **/
+#define vector_remove_n(self, index, number_of_elements)         \
+  (memmove(                                                      \
+     &(self)[index],                                             \
+     &(self)[(index) + (number_of_elements)],                    \
+     sizeof *(self) * (_vector_internal_get_header(self)->size - \
+                       (number_of_elements) - (index))           \
+   ),                                                            \
+   _vector_internal_get_header(self)->size -= (number_of_elements))
 
 /**
  * @brief Delete a specific vector value by index
  * @param self -> The vector to use
  * @param index -> The index to delete
- * @return The modified vector
  **/
-EmeraldsVector *vector_remove(EmeraldsVector *self, size_t index);
+#define vector_remove(self, index) vector_remove_n(self, index, 1)
 
 /**
- * @brief Deletes the last elemnt of the vector
+ * @brief Deletes the last element of the vector
  * @param self -> The vector to use
- * @return The modified vector
  **/
-EmeraldsVector *vector_remove_last(EmeraldsVector *self);
+#define vector_remove_last(self) vector_remove((self), vector_size(self) - 1)
+
+/**
+ * @brief Finds the last element of the vector
+ * @param self -> The vector to use
+ */
+#define vector_last(self) ((self)[_vector_internal_get_header(self)->size - 1])
 
 /**
  * @brief Get the total number of values inserted in the vector
  * @param self -> The vector to use
  * @return: The number of items in the vector
  **/
-size_t vector_size(EmeraldsVector *self);
+#define vector_size(self) \
+  ((self) ? (size_t)_vector_internal_get_header(self)->size : 0)
 
 /**
  * @brief Frees the memory of the vector
  * @param self -> The vector to free
  */
-void vector_free(EmeraldsVector *self);
+#define vector_free(self)                                                     \
+  ((void)((self) ? vector_allocator(_vector_internal_get_header(self), 0) : 0 \
+   ),                                                                         \
+   (self) = NULL)
+
+/**
+ * @brief Get a memory duplicate of the passed vector
+ * @param self -> The vector to use
+ * @param dup -> The vector to duplicate to
+ **/
+#define vector_dup(self, dup)                 \
+  do {                                        \
+    size_t vlen = vector_size(self);          \
+    for(size_t i = 0; i < vlen; i++) {        \
+      vector_add((dup), vector_get(self, i)); \
+    }                                         \
+  } while(0)
+
+/**
+ * @brief Maps all vector elements in iteration using a modifier function
+ *pointer
+ * @param self -> The vector to map
+ * @param dup -> The new vector to map to
+ * @param modifier -> The modifier function
+ **/
+#define vector_map(self, dup, modifier)                      \
+  do {                                                       \
+    size_t vlen = vector_size(self);                         \
+    if((void *)(self) == (void *)(dup)) {                    \
+      for(size_t i = 0; i < vlen; i++) {                     \
+        vector_set((dup), i, modifier(vector_get(self, i))); \
+      }                                                      \
+    } else {                                                 \
+      for(size_t i = 0; i < vlen; i++) {                     \
+        vector_add((dup), modifier(vector_get(self, i)));    \
+      }                                                      \
+    }                                                        \
+  } while(0)
+
+/**
+ * @brief Filters all vector elements in iteration using a filter function
+ * @param self -> The vector to filter
+ * @param dup -> The new vector to store results
+ * @param filter -> The filter function
+ **/
+#define vector_filter(self, dup, filter)              \
+  do {                                                \
+    size_t vlen = vector_size(self);                  \
+    if((void *)(self) == (void *)(dup)) {             \
+      for(size_t i = 0; i < vector_size(self); i++) { \
+        if(filter(vector_get(self, i))) {             \
+          vector_remove((dup), i);                    \
+          i--;                                        \
+        }                                             \
+      }                                               \
+    } else {                                          \
+      for(size_t i = 0; i < vlen; i++) {              \
+        if(!filter(vector_get(self, i))) {            \
+          vector_add((dup), vector_get(self, i));     \
+        }                                             \
+      }                                               \
+    }                                                 \
+  } while(0)
+
+/**
+ * @brief Selects vector elements according to a selector lambda
+ * @param self -> The vector to select from
+ * @param dup -> The new vector to store results
+ * @param selector -> The selector function
+ */
+#define vector_select(self, dup, selector) vector_filter(self, dup, !selector)
+
+/**
+ * @brief Recudes all vector elements into a void* result using a foldl function
+ * @param self -> The vector to reduce
+ * @param fold -> The folding function to use
+ * @param res -> The result pointer
+ **/
+#define vector_reduce(self, fold, res)        \
+  do {                                        \
+    *res        = vector_get(self, 0);        \
+    size_t vlen = vector_size(self);          \
+    for(size_t i = 1; i < vlen; i++) {        \
+      *res = fold(*res, vector_get(self, i)); \
+    }                                         \
+  } while(0)
+
+static inline int _vector_internal_needs_grow(void *self, size_t addlen) {
+  return (
+    !(self) || (_vector_internal_get_header(self)->size + addlen >
+                _vector_internal_get_header(self)->capacity)
+  );
+}
+
+static void *
+_vector_internal_arrgrow_impl(void *self, size_t elemsize, size_t min_cap) {
+  void *b;
+
+  b = vector_allocator(
+    (self) ? _vector_internal_get_header(self) : 0,
+    elemsize * min_cap + sizeof(_vector_internal_header)
+  );
+
+  b = (char *)b + sizeof(_vector_internal_header);
+
+  if(self == NULL) {
+    _vector_internal_get_header(b)->size = 0;
+  }
+
+  _vector_internal_get_header(b)->capacity = min_cap;
+
+  return b;
+}
+
+static void *_vector_internal_arrgrowf(
+  void *self, size_t elemsize, size_t addlen, size_t min_cap
+) {
+  size_t min_len = vector_size(self) + addlen;
+
+  /* compute the minimum capacity needed */
+  if(min_len > min_cap) {
+    min_cap = min_len;
+  }
+
+  if(min_cap <= _vector_internal_arrgetcapacity(self)) {
+    return self;
+  }
+
+  /* increase needed capacity to guarantee O(1) amortized */
+  if(min_cap < 2 * _vector_internal_arrgetcapacity(self)) {
+    min_cap = 2 * _vector_internal_arrgetcapacity(self);
+  } else if(min_cap < 4) {
+    min_cap = 4;
+  }
+
+  return _vector_internal_arrgrow_impl(self, elemsize, min_cap);
+}
+
+static inline int
+_vector_internal_maybe_grow(void **self, size_t elemsize, size_t addlen) {
+  if(_vector_internal_needs_grow(*self, addlen)) {
+    *self = _vector_internal_arrgrowf(*self, elemsize, addlen, 0);
+  }
+  return 0;
+}
+
+/**
+ * @brief: Initializes a vector data structure
+ * @param argc -> The number of arguments provided by the automation macro
+ * @param ... -> Initialization arguments
+ * @return: The newly created vector
+ */
+static void **_vector_internal_new(size_t argc, ...) {
+  void **self = NULL;
+
+  va_list vars;
+  va_start(vars, argc)
+    ;
+    for(size_t i = 0; i < argc; i++) {
+      vector_add(self, va_arg(vars, void *));
+    }
+  va_end(vars);
+
+  return self;
+}
 
 #endif

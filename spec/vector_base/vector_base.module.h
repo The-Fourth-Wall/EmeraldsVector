@@ -3,7 +3,7 @@
 
 module(T_vector_base, {
   describe("vector", {
-    EmeraldsVector *v;
+    int *v = NULL;
     int a, b, c;
 
     before({
@@ -14,8 +14,8 @@ module(T_vector_base, {
     });
 
     it("creates a new vector", {
-      v = vector_new_empty();
-      assert_that(v isnot NULL);
+      assert_that(v is NULL);
+      assert_that(vector_size(v) is 0);
     });
 
     it("adds exactly three elements to the vector", {
@@ -26,7 +26,7 @@ module(T_vector_base, {
     });
 
     it("creates a new vector with initial elements", {
-      v = vector_new(a, b, c);
+      void *v = vector_new(a, b, c);
       assert_that_int(vector_size(v) equals to 3);
     });
 
@@ -47,13 +47,13 @@ module(T_vector_base, {
     });
 
     it("counts the length correctly on additions and deletions", {
-      EmeraldsVector *vv = vector_new_empty();
+      int *vv = NULL;
 
       assert_that_int(vector_size(vv) equals to 0);
       vector_add(vv, 42);
       vector_add(vv, 43);
       assert_that_int(vector_size(vv) equals to 2);
-      vector_add(vv, "one");
+      vector_add(vv, 1);
       vector_remove(vv, 1);
       assert_that_int(vector_size(vv) equals to 2);
       vector_remove(vv, 0);
