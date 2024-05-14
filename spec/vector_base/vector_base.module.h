@@ -39,11 +39,42 @@ module(T_vector_base, {
       assert_that_int(vector_get(v, 2) equals to c * 2);
     });
 
+    it("tries to set an element out of bounds but gets vibe checked", {
+      vector_set(v, 9999, 123);
+      assert_that_int(vector_get(v, 9999) equals to 0);
+      assert_that_int(vector_size(v) equals to 3);
+    });
+
     it("deletes the second element on the vector", {
       vector_remove(v, 1);
       assert_that_int(vector_size(v) equals to 2);
       assert_that_int(vector_get(v, 0) equals to a);
       assert_that_int(vector_get(v, 1) equals to c * 2);
+    });
+
+    it("deletes multiple elements starting from an index", {
+      long *vv = (long *)vector_new(1, 2, 3, 4, 5, 6, 7);
+      vector_remove_n(vv, 2, 4);
+      assert_that_int(vector_size(vv) equals to 3);
+      assert_that_int(vector_get(vv, 0) equals to 1);
+      assert_that_int(vector_get(vv, 1) equals to 2);
+      assert_that_int(vector_get(vv, 2) equals to 7);
+    });
+
+    it("deletes the last element on the vector", {
+      int *vv = NULL;
+      vector_add(vv, 1);
+      vector_add(vv, 2);
+      vector_add(vv, 4);
+
+      vector_remove_last(vv);
+      assert_that_int(vector_size(vv) equals to 2);
+      assert_that_int(vector_get(vv, 0) equals to 1);
+      assert_that_int(vector_get(vv, 1) equals to 2);
+
+      vector_remove_last(vv);
+      assert_that_int(vector_size(vv) equals to 1);
+      assert_that_int(vector_get(vv, 0) equals to 1);
     });
 
     it("counts the length correctly on additions and deletions", {
@@ -59,6 +90,11 @@ module(T_vector_base, {
       vector_remove(vv, 0);
       vector_remove(vv, 0);
       assert_that_int(vector_size(vv) equals to 0);
+    });
+
+    it("grabs the last element on the vector and returns it", {
+      long *vv = (long *)vector_new(1, 2, 3);
+      assert_that_int(vector_last(vv) equals to 3);
     });
 
     it("frees vector items without error", {

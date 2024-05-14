@@ -2,6 +2,7 @@
 #define __EMERALDS_VECTOR_BASE_H_
 
 #include <stdarg.h> /* va_list, va_arg, va_start, va_end */
+#include <stddef.h> /* ptrdiff_t */
 #include <stdlib.h> /* NULL */
 #include <string.h> /* memmove */
 
@@ -591,13 +592,21 @@ typedef struct {
   (_vector_internal_arrmaybegrow(self, 1), \
    (self)[_vector_internal_get_header(self)->size++] = (item))
 
+/** Helpers for stacks */
+#define vector_push vector_add
+#define vector_pop(self)                      \
+  (_vector_internal_get_header(self)->size--, \
+   (self)[_vector_internal_get_header(self)->size])
+#define vector_peek(self) (self)[_vector_internal_get_header(self)->size - 1]
+
 /**
  * @brief Set the value of a specific vector index to a new one
  * @param self -> The vector
  * @param index -> The index to set the value of
  * @param item -> The item to set the value as
  **/
-#define vector_set(self, index, item) ((self)[index] = (item))
+#define vector_set(self, index, item) \
+  (index < vector_size(self) ? (self)[index] = (item) : 0)
 
 /**
  * @brief Get the value of a specific vector index
@@ -648,6 +657,14 @@ typedef struct {
  **/
 #define vector_size(self) \
   ((self) ? (size_t)_vector_internal_get_header(self)->size : 0)
+
+/**
+ * @brief Same as vector_size but returns a signed value
+ * @param self -> The vector to use
+ * @return: The number of items in the vector
+ */
+#define vector_size_signed(self) \
+  ((self) ? (ptrdiff_t)_vector_internal_get_header(self)->size : 0)
 
 /**
  * @brief Frees the memory of the vector
