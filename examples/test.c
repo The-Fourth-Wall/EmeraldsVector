@@ -10,8 +10,18 @@ int adder(int accumulator, int current) { return accumulator + current; }
 
 int main(void) {
   printf("TESTING VECTOR MAP FILTER REDUCE\n");
-  void **testv = vector_new(1, 2, -3, -4, 5, -1, -2, 3, 4, -5);
-  int sum      = 0;
+  int sum    = 0;
+  int *testv = NULL;
+  vector_add(testv, 1);
+  vector_add(testv, 2);
+  vector_add(testv, -3);
+  vector_add(testv, -4);
+  vector_add(testv, 5);
+  vector_add(testv, -1);
+  vector_add(testv, -2);
+  vector_add(testv, 3);
+  vector_add(testv, 4);
+  vector_add(testv, -5);
 
   vector_map(testv, testv, double_item);
   vector_select(testv, testv, positive_filter);

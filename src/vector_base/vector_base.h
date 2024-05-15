@@ -3,7 +3,7 @@
 
 #include <stdarg.h> /* va_list, va_arg, va_start, va_end */
 #include <stddef.h> /* ptrdiff_t */
-#include <stdlib.h> /* NULL */
+#include <stdlib.h> /* NULL, realloc */
 #include <string.h> /* memmove */
 
 #define VECTOR_PP_256TH_ARG( \
@@ -568,10 +568,14 @@ typedef struct {
 #define _vector_internal_get_header(t) ((_vector_internal_header *)(t) - 1)
 #define _vector_internal_arrgetcapacity(v) \
   ((v) ? _vector_internal_get_header(v)->capacity : 0)
-#define _vector_internal_arrgrow(v, b, c) \
-  ((v) = _vector_internal_arrgrowf((v), sizeof *(v), (b), (c)))
-#define _vector_internal_arrmaybegrow(v, n) \
-  _vector_internal_maybe_grow((void **)&(v), sizeof(*(v)), (n))
+
+#define _vector_vptr_size(v) sizeof(*(v)) // NOLINT
+#define _vector_internal_arrmaybegrow(v, n)                           \
+  ((!(v) || _vector_internal_get_header(v)->size + (n) >              \
+              _vector_internal_get_header(v)->capacity)               \
+     ? (*(void **)&(v) =                                              \
+          _vector_internal_arrgrowf(v, _vector_vptr_size(v), (n), 0)) \
+     : 0)
 
 #ifndef vector_allocator
   #define vector_allocator realloc
@@ -757,22 +761,30 @@ typedef struct {
     }                                         \
   } while(0)
 
-static inline int _vector_internal_needs_grow(void *self, size_t addlen) {
-  return (
-    !(self) || (_vector_internal_get_header(self)->size + addlen >
-                _vector_internal_get_header(self)->capacity)
-  );
-}
-
-static void *
-_vector_internal_arrgrow_impl(void *self, size_t elemsize, size_t min_cap) {
+static void *_vector_internal_arrgrowf(
+  void *self, size_t elemsize, size_t addlen, size_t min_cap
+) {
   void *b;
+  size_t min_len = vector_size_signed(self) + addlen;
+
+  if(min_len > min_cap) {
+    min_cap = min_len;
+  }
+
+  if(min_cap <= _vector_internal_arrgetcapacity(self)) {
+    return self;
+  }
+
+  if(min_cap < 2 * _vector_internal_arrgetcapacity(self)) {
+    min_cap = 2 * _vector_internal_arrgetcapacity(self);
+  } else if(min_cap < 4) {
+    min_cap = 4;
+  }
 
   b = vector_allocator(
     (self) ? _vector_internal_get_header(self) : 0,
     elemsize * min_cap + sizeof(_vector_internal_header)
   );
-
   b = (char *)b + sizeof(_vector_internal_header);
 
   if(self == NULL) {
@@ -782,38 +794,6 @@ _vector_internal_arrgrow_impl(void *self, size_t elemsize, size_t min_cap) {
   _vector_internal_get_header(b)->capacity = min_cap;
 
   return b;
-}
-
-static void *_vector_internal_arrgrowf(
-  void *self, size_t elemsize, size_t addlen, size_t min_cap
-) {
-  size_t min_len = vector_size(self) + addlen;
-
-  /* compute the minimum capacity needed */
-  if(min_len > min_cap) {
-    min_cap = min_len;
-  }
-
-  if(min_cap <= _vector_internal_arrgetcapacity(self)) {
-    return self;
-  }
-
-  /* increase needed capacity to guarantee O(1) amortized */
-  if(min_cap < 2 * _vector_internal_arrgetcapacity(self)) {
-    min_cap = 2 * _vector_internal_arrgetcapacity(self);
-  } else if(min_cap < 4) {
-    min_cap = 4;
-  }
-
-  return _vector_internal_arrgrow_impl(self, elemsize, min_cap);
-}
-
-static inline int
-_vector_internal_maybe_grow(void **self, size_t elemsize, size_t addlen) {
-  if(_vector_internal_needs_grow(*self, addlen)) {
-    *self = _vector_internal_arrgrowf(*self, elemsize, addlen, 0);
-  }
-  return 0;
 }
 
 /**
