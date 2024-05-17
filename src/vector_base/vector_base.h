@@ -565,16 +565,19 @@ typedef struct {
   size_t capacity;
 } _vector_internal_header;
 
-#define _vector_internal_get_header(t) ((_vector_internal_header *)(t) - 1)
-#define _vector_internal_arrgetcapacity(v) \
-  ((v) ? _vector_internal_get_header(v)->capacity : 0)
-
-#define _vector_vptr_size(v) sizeof(*(v)) // NOLINT
-#define _vector_internal_arrmaybegrow(v, n)                           \
-  ((!(v) || _vector_internal_get_header(v)->size + (n) >              \
-              _vector_internal_get_header(v)->capacity)               \
-     ? (*(void **)&(v) =                                              \
-          _vector_internal_arrgrowf(v, _vector_vptr_size(v), (n), 0)) \
+#define _vector_internal_get_header(type) \
+  ((_vector_internal_header *)(type) - 1)
+#define _vector_internal_getcapacity(self) \
+  ((self) ? _vector_internal_get_header(self)->capacity : 0)
+#define _vector_internal_selfptr_size(self) sizeof(*(self)) // NOLINT
+#define _vector_internal_grow(self, n)                   \
+  (*(void **)&(self) = _vector_internal_growf(           \
+     (self), _vector_internal_selfptr_size(self), (n), 0 \
+   ))
+#define _vector_internal_maybegrow(self, n)                    \
+  ((!(self) || _vector_internal_get_header(self)->size + (n) > \
+                 _vector_internal_get_header(self)->capacity)  \
+     ? (_vector_internal_grow(self, n), 0)                     \
      : 0)
 
 #ifndef vector_allocator
@@ -592,9 +595,20 @@ typedef struct {
  * @param self -> The vector to use
  * @param item -> The item to add
  **/
-#define vector_add(self, item)             \
-  (_vector_internal_arrmaybegrow(self, 1), \
+#define vector_add(self, item)          \
+  (_vector_internal_maybegrow(self, 1), \
    (self)[_vector_internal_get_header(self)->size++] = (item))
+
+/**
+ * @brief Adds a larger element in the vector
+ * @param self -> The vector to use
+ * @param item -> The item to add (usually byte sized like char*)
+ * @param n -> The number with which to extend size
+ */
+#define vector_add_n(self, item, n)           \
+  _vector_internal_maybegrow(self, n);        \
+  memmove(self + string_size(self), item, n); \
+  _vector_internal_get_header(self)->size += n;
 
 /** Helpers for stacks */
 #define vector_push vector_add
@@ -761,7 +775,7 @@ typedef struct {
     }                                         \
   } while(0)
 
-static void *_vector_internal_arrgrowf(
+static void *_vector_internal_growf(
   void *self, size_t elemsize, size_t addlen, size_t min_cap
 ) {
   void *b;
@@ -771,12 +785,12 @@ static void *_vector_internal_arrgrowf(
     min_cap = min_len;
   }
 
-  if(min_cap <= _vector_internal_arrgetcapacity(self)) {
+  if(min_cap <= _vector_internal_getcapacity(self)) {
     return self;
   }
 
-  if(min_cap < 2 * _vector_internal_arrgetcapacity(self)) {
-    min_cap = 2 * _vector_internal_arrgetcapacity(self);
+  if(min_cap < 2 * _vector_internal_getcapacity(self)) {
+    min_cap = 2 * _vector_internal_getcapacity(self);
   } else if(min_cap < 4) {
     min_cap = 4;
   }
