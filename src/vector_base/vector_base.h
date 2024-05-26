@@ -590,6 +590,9 @@ typedef struct {
 #define vector_new(...) \
   _vector_internal_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
 
+#define vector_string_new(...) \
+  _vector_internal_string_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
+
 /**
  * @brief Adds a new element in the vector
  * @param self -> The vector to use
@@ -824,6 +827,20 @@ static void **_vector_internal_new(size_t argc, ...) {
     ;
     for(size_t i = 0; i < argc; i++) {
       vector_add(self, va_arg(vars, void *));
+    }
+  va_end(vars);
+
+  return self;
+}
+
+static char **_vector_internal_string_new(size_t argc, ...) {
+  char **self = NULL;
+
+  va_list vars;
+  va_start(vars, argc)
+    ;
+    for(size_t i = 0; i < argc; i++) {
+      vector_add(self, va_arg(vars, char *));
     }
   va_end(vars);
 

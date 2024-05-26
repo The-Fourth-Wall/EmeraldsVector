@@ -97,6 +97,14 @@ module(T_vector_base, {
       assert_that_int(vector_last(vv) equals to 3);
     });
 
+    it("creates a char* vector with `new`", {
+      char **cv = vector_string_new("a", "b", "c");
+      assert_that_int(vector_size(cv) equals to 3);
+      assert_that_charptr(vector_get(cv, 0) equals to "a");
+      assert_that_charptr(vector_get(cv, 1) equals to "b");
+      assert_that_charptr(vector_get(cv, 2) equals to "c");
+    });
+
     it("frees vector items without error", {
       vector_free(v);
       assert_that(true is true);
