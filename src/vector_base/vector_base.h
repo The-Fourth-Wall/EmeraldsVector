@@ -594,6 +594,12 @@ typedef struct {
   _vector_internal_string_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
 
 /**
+ * @brief Initializes an empty vector without adding an element
+ * @param self -> The vector to use
+ */
+#define vector_initialize(self) _vector_internal_maybegrow(self, 1)
+
+/**
  * @brief Adds a new element in the vector
  * @param self -> The vector to use
  * @param item -> The item to add
