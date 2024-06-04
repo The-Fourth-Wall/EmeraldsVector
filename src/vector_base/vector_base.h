@@ -614,7 +614,7 @@ typedef struct {
  */
 #define vector_add_n(self, item, n)           \
   _vector_maybegrow(self, n);                 \
-  memmove(self + string_size(self), item, n); \
+  memmove(self + vector_size(self), item, n); \
   _vector_get_header(self)->size += n;
 
 /** Helpers for stacks */
