@@ -563,21 +563,19 @@
 typedef struct {
   size_t size;
   size_t capacity;
-} _vector_internal_header;
+} _vector_header;
 
-#define _vector_internal_get_header(type) \
-  ((_vector_internal_header *)(type) - 1)
-#define _vector_internal_getcapacity(self) \
-  ((self) ? _vector_internal_get_header(self)->capacity : 0)
-#define _vector_internal_selfptr_size(self) sizeof(*(self)) // NOLINT
-#define _vector_internal_grow(self, n)                   \
-  (*(void **)&(self) = _vector_internal_growf(           \
-     (self), _vector_internal_selfptr_size(self), (n), 0 \
-   ))
-#define _vector_internal_maybegrow(self, n)                    \
-  ((!(self) || _vector_internal_get_header(self)->size + (n) > \
-                 _vector_internal_get_header(self)->capacity)  \
-     ? (_vector_internal_grow(self, n), 0)                     \
+#define _vector_get_header(type) ((_vector_header *)(type) - 1)
+#define _vector_getcapacity(self) \
+  ((self) ? _vector_get_header(self)->capacity : 0)
+#define _vector_selfptr_size(self) sizeof(*(self)) // NOLINT
+#define _vector_grow(self, n) \
+  (*(void **)&(self) =        \
+     _vector_growf((self), _vector_selfptr_size(self), (n), 0))
+#define _vector_maybegrow(self, n)                                             \
+  ((!(self) ||                                                                 \
+    _vector_get_header(self)->size + (n) > _vector_get_header(self)->capacity) \
+     ? (_vector_grow(self, n), 0)                                              \
      : 0)
 
 #ifndef vector_allocator
@@ -587,26 +585,25 @@ typedef struct {
 /**
  * @brief Macro helper for variadic arguments
  */
-#define vector_new(...) \
-  _vector_internal_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
+#define vector_new(...) _vector_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
 
 #define vector_string_new(...) \
-  _vector_internal_string_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
+  _vector_string_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
 
 /**
  * @brief Initializes an empty vector without adding an element
  * @param self -> The vector to use
  */
-#define vector_initialize(self) _vector_internal_maybegrow(self, 1)
+#define vector_initialize(self) _vector_maybegrow(self, 1)
 
 /**
  * @brief Adds a new element in the vector
  * @param self -> The vector to use
  * @param item -> The item to add
  **/
-#define vector_add(self, item)          \
-  (_vector_internal_maybegrow(self, 1), \
-   (self)[_vector_internal_get_header(self)->size++] = (item))
+#define vector_add(self, item) \
+  (_vector_maybegrow(self, 1), \
+   (self)[_vector_get_header(self)->size++] = (item))
 
 /**
  * @brief Adds a larger element in the vector
@@ -615,16 +612,15 @@ typedef struct {
  * @param n -> The number with which to extend size
  */
 #define vector_add_n(self, item, n)           \
-  _vector_internal_maybegrow(self, n);        \
+  _vector_maybegrow(self, n);                 \
   memmove(self + string_size(self), item, n); \
-  _vector_internal_get_header(self)->size += n;
+  _vector_get_header(self)->size += n;
 
 /** Helpers for stacks */
 #define vector_push vector_add
-#define vector_pop(self)                      \
-  (_vector_internal_get_header(self)->size--, \
-   (self)[_vector_internal_get_header(self)->size])
-#define vector_peek(self) (self)[_vector_internal_get_header(self)->size - 1]
+#define vector_pop(self) \
+  (_vector_get_header(self)->size--, (self)[_vector_get_header(self)->size])
+#define vector_peek(self) (self)[_vector_get_header(self)->size - 1]
 
 /**
  * @brief Set the value of a specific vector index to a new one
@@ -649,14 +645,14 @@ typedef struct {
  * @param index -> The index to start
  * @param n -> The number of elements to delete
  **/
-#define vector_remove_n(self, index, number_of_elements)         \
-  (memmove(                                                      \
-     &(self)[index],                                             \
-     &(self)[(index) + (number_of_elements)],                    \
-     sizeof *(self) * (_vector_internal_get_header(self)->size - \
-                       (number_of_elements) - (index))           \
-   ),                                                            \
-   _vector_internal_get_header(self)->size -= (number_of_elements))
+#define vector_remove_n(self, index, number_of_elements)                 \
+  (memmove(                                                              \
+     &(self)[index],                                                     \
+     &(self)[(index) + (number_of_elements)],                            \
+     sizeof *(self) *                                                    \
+       (_vector_get_header(self)->size - (number_of_elements) - (index)) \
+   ),                                                                    \
+   _vector_get_header(self)->size -= (number_of_elements))
 
 /**
  * @brief Delete a specific vector value by index
@@ -675,15 +671,14 @@ typedef struct {
  * @brief Finds the last element of the vector
  * @param self -> The vector to use
  */
-#define vector_last(self) ((self)[_vector_internal_get_header(self)->size - 1])
+#define vector_last(self) ((self)[_vector_get_header(self)->size - 1])
 
 /**
  * @brief Get the total number of values inserted in the vector
  * @param self -> The vector to use
  * @return: The number of items in the vector
  **/
-#define vector_size(self) \
-  ((self) ? (size_t)_vector_internal_get_header(self)->size : 0)
+#define vector_size(self) ((self) ? (size_t)_vector_get_header(self)->size : 0)
 
 /**
  * @brief Same as vector_size but returns a signed value
@@ -691,15 +686,14 @@ typedef struct {
  * @return: The number of items in the vector
  */
 #define vector_size_signed(self) \
-  ((self) ? (ptrdiff_t)_vector_internal_get_header(self)->size : 0)
+  ((self) ? (ptrdiff_t)_vector_get_header(self)->size : 0)
 
 /**
  * @brief Frees the memory of the vector
  * @param self -> The vector to free
  */
-#define vector_free(self)                                                     \
-  ((void)((self) ? vector_allocator(_vector_internal_get_header(self), 0) : 0 \
-   ),                                                                         \
+#define vector_free(self)                                              \
+  ((void)((self) ? vector_allocator(_vector_get_header(self), 0) : 0), \
    (self) = NULL)
 
 /**
@@ -784,9 +778,8 @@ typedef struct {
     }                                         \
   } while(0)
 
-static void *_vector_internal_growf(
-  void *self, size_t elemsize, size_t addlen, size_t min_cap
-) {
+static void *
+_vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
   void *b;
   size_t min_len = vector_size_signed(self) + addlen;
 
@@ -794,27 +787,27 @@ static void *_vector_internal_growf(
     min_cap = min_len;
   }
 
-  if(min_cap <= _vector_internal_getcapacity(self)) {
+  if(min_cap <= _vector_getcapacity(self)) {
     return self;
   }
 
-  if(min_cap < 2 * _vector_internal_getcapacity(self)) {
-    min_cap = 2 * _vector_internal_getcapacity(self);
+  if(min_cap < 2 * _vector_getcapacity(self)) {
+    min_cap = 2 * _vector_getcapacity(self);
   } else if(min_cap < 4) {
     min_cap = 4;
   }
 
   b = vector_allocator(
-    (self) ? _vector_internal_get_header(self) : 0,
-    elemsize * min_cap + sizeof(_vector_internal_header)
+    (self) ? _vector_get_header(self) : 0,
+    elemsize * min_cap + sizeof(_vector_header)
   );
-  b = (char *)b + sizeof(_vector_internal_header);
+  b = (char *)b + sizeof(_vector_header);
 
   if(self == NULL) {
-    _vector_internal_get_header(b)->size = 0;
+    _vector_get_header(b)->size = 0;
   }
 
-  _vector_internal_get_header(b)->capacity = min_cap;
+  _vector_get_header(b)->capacity = min_cap;
 
   return b;
 }
@@ -825,7 +818,7 @@ static void *_vector_internal_growf(
  * @param ... -> Initialization arguments
  * @return: The newly created vector
  */
-static void **_vector_internal_new(size_t argc, ...) {
+static void **_vector_new(size_t argc, ...) {
   void **self = NULL;
 
   va_list vars;
@@ -839,7 +832,7 @@ static void **_vector_internal_new(size_t argc, ...) {
   return self;
 }
 
-static char **_vector_internal_string_new(size_t argc, ...) {
+static char **_vector_string_new(size_t argc, ...) {
   char **self = NULL;
 
   va_list vars;
