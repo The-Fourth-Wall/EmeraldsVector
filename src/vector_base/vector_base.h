@@ -586,9 +586,9 @@ typedef struct {
  * @brief Macro helper for variadic arguments
  */
 #define _vector_internal_get_first_arg(first, ...) first
-#define vector_new(...)                                                                                                                                                                                                                                                                 \
-  _Generic(_vector_internal_get_first_arg(__VA_ARGS__), void *: _vector_internal_voidptr_new, char *: _vector_internal_charptr_new, const char *: _vector_internal_charptr_new, int: _vector_internal_int_new, long: _vector_internal_long_new, default: _vector_internal_voidptr_new)( \
-    VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__                                                                                                                                                                                                                                            \
+#define vector_new(...)                                                                                                                                                                                                                                                                            \
+  _Generic(_vector_internal_get_first_arg(__VA_ARGS__, (void *)0), void *: _vector_internal_voidptr_new, char *: _vector_internal_charptr_new, const char *: _vector_internal_charptr_new, int: _vector_internal_int_new, long: _vector_internal_long_new, default: _vector_internal_voidptr_new)( \
+    VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__                                                                                                                                                                                                                                                       \
   )
 
 /**

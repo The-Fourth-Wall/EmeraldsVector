@@ -151,6 +151,12 @@ module(T_vector_base, {
       assert_that_charptr(vector_get(cv, 2) equals to "c");
     });
 
+    it("creates a new vector with 1 element", {
+      int *vv = vector_new(1);
+      assert_that_int(vector_size(vv) equals to 1);
+      assert_that_int(vector_get(vv, 0) equals to 1);
+    });
+
     it("frees vector items without error", {
       vector_free(v);
       assert_that(true is true);
