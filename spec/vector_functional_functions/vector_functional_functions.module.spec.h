@@ -1,7 +1,7 @@
 #include "../../libs/cSpec/export/cSpec.h"
 #include "../../src/vector_base/vector_base.h"
 
-int *vec = NULL;
+static int *vec = NULL;
 static void setup_vector(void) {
   vector_free(vec);
   vector_add(vec, 1);

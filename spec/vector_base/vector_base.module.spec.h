@@ -1,7 +1,9 @@
 #include "../../libs/cSpec/export/cSpec.h"
 #include "../../src/vector_base/vector_base.h"
 
-void _external_vector_add(int **self, int value) { vector_add(*self, value); }
+static void _external_vector_add(int **self, int value) {
+  vector_add(*self, value);
+}
 
 module(T_vector_base, {
   describe("vector", {

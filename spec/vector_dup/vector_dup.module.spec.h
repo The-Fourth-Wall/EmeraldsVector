@@ -1,8 +1,8 @@
 #include "../../libs/cSpec/export/cSpec.h"
 #include "../../src/vector_base/vector_base.h"
 
-int *v   = NULL;
-int *dup = NULL;
+static int *v   = NULL;
+static int *dup = NULL;
 
 static void initialize_vectors(void) {
   vector_free(v);
