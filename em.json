@@ -17,7 +17,7 @@
     "cc": "clang",
     "debug": {
       "opt": "-Og -g",
-      "version": "-std=c99",
+      "version": "-std=c11",
       "flags": "-Wall -Wextra -Werror -pedantic -pedantic-errors -Wpedantic",
       "warnings": "",
       "libs": ""
@@ -31,7 +31,7 @@
     },
     "test": {
       "opt": "-Og -g",
-      "version": "-std=c99",
+      "version": "-std=c11",
       "flags": "-Wall -Wextra -Werror -pedantic -pedantic-errors -Wpedantic",
       "warnings": "-Wno-extra-semi -Wno-int-conversion -Wno-incompatible-pointer-types -Wno-unused-function",
       "libs": ""

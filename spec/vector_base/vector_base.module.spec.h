@@ -81,7 +81,7 @@ module(T_vector_base, {
     });
 
     it("sets the third element to the double of the previous value", {
-      vector_set(v, 2, (long)vector_get(v, 2) * 2);
+      vector_set(v, 2, vector_get(v, 2) * 2);
       assert_that_int(vector_get(v, 2) equals to c * 2);
     });
 
@@ -99,7 +99,7 @@ module(T_vector_base, {
     });
 
     it("deletes multiple elements starting from an index", {
-      long *vv = (long *)vector_new(1, 2, 3, 4, 5, 6, 7);
+      int *vv = vector_new(1, 2, 3, 4, 5, 6, 7);
       vector_remove_n(vv, 2, 4);
       assert_that_int(vector_size(vv) equals to 3);
       assert_that_int(vector_get(vv, 0) equals to 1);
@@ -139,12 +139,12 @@ module(T_vector_base, {
     });
 
     it("grabs the last element on the vector and returns it", {
-      long *vv = (long *)vector_new(1, 2, 3);
+      int *vv = vector_new(1, 2, 3);
       assert_that_int(vector_last(vv) equals to 3);
     });
 
     it("creates a char* vector with `new`", {
-      char **cv = vector_string_new("a", "b", "c");
+      char **cv = vector_new("a", "b", "c");
       assert_that_int(vector_size(cv) equals to 3);
       assert_that_charptr(vector_get(cv, 0) equals to "a");
       assert_that_charptr(vector_get(cv, 1) equals to "b");

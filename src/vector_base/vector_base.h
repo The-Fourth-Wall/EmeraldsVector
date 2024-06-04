@@ -585,10 +585,11 @@ typedef struct {
 /**
  * @brief Macro helper for variadic arguments
  */
-#define vector_new(...) _vector_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
-
-#define vector_string_new(...) \
-  _vector_string_new(VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__)
+#define _vector_internal_get_first_arg(first, ...) first
+#define vector_new(...)                                                                                                                                                                                                                                                                 \
+  _Generic(_vector_internal_get_first_arg(__VA_ARGS__), void *: _vector_internal_voidptr_new, char *: _vector_internal_charptr_new, const char *: _vector_internal_charptr_new, int: _vector_internal_int_new, long: _vector_internal_long_new, default: _vector_internal_voidptr_new)( \
+    VECTOR_PP_NARG(__VA_ARGS__), __VA_ARGS__                                                                                                                                                                                                                                            \
+  )
 
 /**
  * @brief Initializes an empty vector without adding an element
@@ -818,32 +819,23 @@ _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
  * @param ... -> Initialization arguments
  * @return: The newly created vector
  */
-static void **_vector_new(size_t argc, ...) {
-  void **self = NULL;
-
-  va_list vars;
-  va_start(vars, argc)
-    ;
-    for(size_t i = 0; i < argc; i++) {
-      vector_add(self, va_arg(vars, void *));
-    }
-  va_end(vars);
-
-  return self;
-}
-
-static char **_vector_string_new(size_t argc, ...) {
-  char **self = NULL;
-
-  va_list vars;
-  va_start(vars, argc)
-    ;
-    for(size_t i = 0; i < argc; i++) {
-      vector_add(self, va_arg(vars, char *));
-    }
-  va_end(vars);
-
-  return self;
-}
+#define _vector_internal_new(type, name)                         \
+  static type *_vector_internal_##name##_new(size_t argc, ...) { \
+    type *self = NULL;                                           \
+                                                                 \
+    va_list vars;                                                \
+    va_start(vars, argc)                                         \
+      ;                                                          \
+      for(size_t i = 0; i < argc; i++) {                         \
+        vector_add(self, va_arg(vars, type));                    \
+      }                                                          \
+    va_end(vars);                                                \
+                                                                 \
+    return self;                                                 \
+  }
+_vector_internal_new(void *, voidptr);
+_vector_internal_new(char *, charptr);
+_vector_internal_new(int, int);
+_vector_internal_new(long, long);
 
 #endif
