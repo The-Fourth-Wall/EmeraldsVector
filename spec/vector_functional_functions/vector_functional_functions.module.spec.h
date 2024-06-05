@@ -1,5 +1,5 @@
 #include "../../libs/cSpec/export/cSpec.h"
-#include "../../src/vector_base/vector_base.h"
+#include "../../src/vector_functional_functions/vector_functional_functions.h"
 
 static int *vec = NULL;
 static void setup_vector(void) {

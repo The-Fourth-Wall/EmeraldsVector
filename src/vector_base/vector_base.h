@@ -617,12 +617,6 @@ typedef struct {
   memmove(self + vector_size(self), item, n); \
   _vector_get_header(self)->size += n;
 
-/** Helpers for stacks */
-#define vector_push vector_add
-#define vector_pop(self) \
-  (_vector_get_header(self)->size--, (self)[_vector_get_header(self)->size])
-#define vector_peek(self) (self)[_vector_get_header(self)->size - 1]
-
 /**
  * @brief Set the value of a specific vector index to a new one
  * @param self -> The vector
@@ -696,88 +690,6 @@ typedef struct {
 #define vector_free(self)                                              \
   ((void)((self) ? vector_allocator(_vector_get_header(self), 0) : 0), \
    (self) = NULL)
-
-/**
- * @brief Get a memory duplicate of the passed vector
- * @param self -> The vector to use
- * @param dup -> The vector to duplicate to
- **/
-#define vector_dup(self, dup)                 \
-  do {                                        \
-    size_t vlen = vector_size(self);          \
-    for(size_t i = 0; i < vlen; i++) {        \
-      vector_add((dup), vector_get(self, i)); \
-    }                                         \
-  } while(0)
-
-/**
- * @brief Maps all vector elements in iteration using a modifier function
- *pointer
- * @param self -> The vector to map
- * @param dup -> The new vector to map to
- * @param modifier -> The modifier function
- **/
-#define vector_map(self, dup, modifier)                      \
-  do {                                                       \
-    size_t vlen = vector_size(self);                         \
-    if((void *)(self) == (void *)(dup)) {                    \
-      for(size_t i = 0; i < vlen; i++) {                     \
-        vector_set((dup), i, modifier(vector_get(self, i))); \
-      }                                                      \
-    } else {                                                 \
-      for(size_t i = 0; i < vlen; i++) {                     \
-        vector_add((dup), modifier(vector_get(self, i)));    \
-      }                                                      \
-    }                                                        \
-  } while(0)
-
-/**
- * @brief Filters all vector elements in iteration using a filter function
- * @param self -> The vector to filter
- * @param dup -> The new vector to store results
- * @param filter -> The filter function
- **/
-#define vector_filter(self, dup, filter)              \
-  do {                                                \
-    size_t vlen = vector_size(self);                  \
-    if((void *)(self) == (void *)(dup)) {             \
-      for(size_t i = 0; i < vector_size(self); i++) { \
-        if(filter(vector_get(self, i))) {             \
-          vector_remove((dup), i);                    \
-          i--;                                        \
-        }                                             \
-      }                                               \
-    } else {                                          \
-      for(size_t i = 0; i < vlen; i++) {              \
-        if(!filter(vector_get(self, i))) {            \
-          vector_add((dup), vector_get(self, i));     \
-        }                                             \
-      }                                               \
-    }                                                 \
-  } while(0)
-
-/**
- * @brief Selects vector elements according to a selector lambda
- * @param self -> The vector to select from
- * @param dup -> The new vector to store results
- * @param selector -> The selector function
- */
-#define vector_select(self, dup, selector) vector_filter(self, dup, !selector)
-
-/**
- * @brief Recudes all vector elements into a void* result using a foldl function
- * @param self -> The vector to reduce
- * @param fold -> The folding function to use
- * @param res -> The result pointer
- **/
-#define vector_reduce(self, fold, res)        \
-  do {                                        \
-    *res        = vector_get(self, 0);        \
-    size_t vlen = vector_size(self);          \
-    for(size_t i = 1; i < vlen; i++) {        \
-      *res = fold(*res, vector_get(self, i)); \
-    }                                         \
-  } while(0)
 
 static void *
 _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
