@@ -157,6 +157,26 @@ module(T_vector_base, {
       assert_that_int(vector_get(vv, 0) equals to 1);
     });
 
+    it("creates new vectors but using variables instead of literals", {
+      int a   = 1;
+      int b   = 2;
+      int c   = 3;
+      int *vv = vector_new(a, b, c);
+      assert_that_int(vector_size(vv) equals to 3);
+      assert_that_int(vector_get(vv, 0) equals to 1);
+      assert_that_int(vector_get(vv, 1) equals to 2);
+      assert_that_int(vector_get(vv, 2) equals to 3);
+
+      const char *aa = "a";
+      const char *bb = "b";
+      const char *cc = "c";
+      char **cv = vector_new(aa, bb, cc);
+      assert_that_int(vector_size(cv) equals to 3);
+      assert_that_charptr(vector_get(cv, 0) equals to "a");
+      assert_that_charptr(vector_get(cv, 1) equals to "b");
+      assert_that_charptr(vector_get(cv, 2) equals to "c");
+    });
+
     it("frees vector items without error", {
       vector_free(v);
       assert_that(true is true);

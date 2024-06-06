@@ -4,7 +4,8 @@
   "version": "0.3.0",
 
   "dependencies": {
-    "EmeraldsBool": "Oblivious-Oblivious/EmeraldsBool"
+    "EmeraldsBool": "Oblivious-Oblivious/EmeraldsBool",
+    "EmeraldsPreprocessor": "Oblivious-Oblivious/EmeraldsPreprocessor"
   },
 
   "dev-dependencies": {
