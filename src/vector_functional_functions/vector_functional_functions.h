@@ -10,18 +10,18 @@
  * @param dup -> The new vector to map to
  * @param modifier -> The modifier function
  **/
-#define vector_map(self, dup, modifier)                      \
-  do {                                                       \
-    size_t vlen = vector_size(self);                         \
-    if((void *)(self) == (void *)(dup)) {                    \
-      for(size_t i = 0; i < vlen; i++) {                     \
-        vector_set((dup), i, modifier(vector_get(self, i))); \
-      }                                                      \
-    } else {                                                 \
-      for(size_t i = 0; i < vlen; i++) {                     \
-        vector_add((dup), modifier(vector_get(self, i)));    \
-      }                                                      \
-    }                                                        \
+#define vector_map(self, dup, modifier)       \
+  do {                                        \
+    size_t vlen = vector_size(self);          \
+    if((void *)(self) == (void *)(dup)) {     \
+      for(size_t i = 0; i < vlen; i++) {      \
+        (dup)[i] = modifier((self)[i]);       \
+      }                                       \
+    } else {                                  \
+      for(size_t i = 0; i < vlen; i++) {      \
+        vector_add((dup), modifier(self[i])); \
+      }                                       \
+    }                                         \
   } while(0)
 
 /**
@@ -35,15 +35,15 @@
     size_t vlen = vector_size(self);                  \
     if((void *)(self) == (void *)(dup)) {             \
       for(size_t i = 0; i < vector_size(self); i++) { \
-        if(filter(vector_get(self, i))) {             \
+        if(filter(self[i])) {                         \
           vector_remove((dup), i);                    \
           i--;                                        \
         }                                             \
       }                                               \
     } else {                                          \
       for(size_t i = 0; i < vlen; i++) {              \
-        if(!filter(vector_get(self, i))) {            \
-          vector_add((dup), vector_get(self, i));     \
+        if(!filter(self[i])) {                        \
+          vector_add((dup), self[i]);                 \
         }                                             \
       }                                               \
     }                                                 \
@@ -63,13 +63,15 @@
  * @param fold -> The folding function to use
  * @param res -> The result pointer
  **/
-#define vector_reduce(self, fold, res)        \
-  do {                                        \
-    *res        = vector_get(self, 0);        \
-    size_t vlen = vector_size(self);          \
-    for(size_t i = 1; i < vlen; i++) {        \
-      *res = fold(*res, vector_get(self, i)); \
-    }                                         \
+#define vector_reduce(self, fold, res)   \
+  do {                                   \
+    if(self != NULL) {                   \
+      *res        = self[0];             \
+      size_t vlen = vector_size(self);   \
+      for(size_t i = 1; i < vlen; i++) { \
+        *res = fold(*res, self[i]);      \
+      }                                  \
+    }                                    \
   } while(0)
 
 #endif

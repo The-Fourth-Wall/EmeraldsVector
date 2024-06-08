@@ -33,11 +33,11 @@ module(T_vector_functional_functions, {
     int *mapped_v = NULL;
     vector_map(vec, mapped_v, double_item);
     assert_that_int(vector_size(mapped_v) equals to 5);
-    assert_that_int(vector_get(mapped_v, 0) equals to 2);
-    assert_that_int(vector_get(mapped_v, 1) equals to 4);
-    assert_that_int(vector_get(mapped_v, 2) equals to 6);
-    assert_that_int(vector_get(mapped_v, 3) equals to 8);
-    assert_that_int(vector_get(mapped_v, 4) equals to 10);
+    assert_that_int(mapped_v[0] equals to 2);
+    assert_that_int(mapped_v[1] equals to 4);
+    assert_that_int(mapped_v[2] equals to 6);
+    assert_that_int(mapped_v[3] equals to 8);
+    assert_that_int(mapped_v[4] equals to 10);
   });
 
   it("tries to filter out an empty vector", {
@@ -51,9 +51,9 @@ module(T_vector_functional_functions, {
     int *filtered_v = NULL;
     vector_filter(vec, filtered_v, greater_than_three);
     assert_that_int(vector_size(filtered_v) equals to 3);
-    assert_that_int(vector_get(filtered_v, 0) equals to 1);
-    assert_that_int(vector_get(filtered_v, 1) equals to 2);
-    assert_that_int(vector_get(filtered_v, 2) equals to 3);
+    assert_that_int(filtered_v[0] equals to 1);
+    assert_that_int(filtered_v[1] equals to 2);
+    assert_that_int(filtered_v[2] equals to 3);
   });
 
   it("tries to select from an empty vector", {
@@ -67,8 +67,8 @@ module(T_vector_functional_functions, {
     int *filtered_v = NULL;
     vector_select(vec, filtered_v, greater_than_three);
     assert_that_int(vector_size(filtered_v) equals to 2);
-    assert_that_int(vector_get(filtered_v, 0) equals to 4);
-    assert_that_int(vector_get(filtered_v, 1) equals to 5);
+    assert_that_int(filtered_v[0] equals to 4);
+    assert_that_int(filtered_v[1] equals to 5);
   });
 
   it("tries to reduce an empty vector", {
@@ -79,36 +79,32 @@ module(T_vector_functional_functions, {
   });
 
   it("reduces a vector to the addition of its elements", {
-    int reduced;
+    int reduced = 0;
     vector_reduce(vec, adder, &reduced);
     assert_that_int(reduced equals to 15);
   });
 
-  it(
-    "maps to the double, filters positives and reduces to the sum of "
-    "elements",
-    {
-      int *testv = NULL;
-      vector_add(testv, 1);
-      vector_add(testv, 2);
-      vector_add(testv, -3);
-      vector_add(testv, -4);
-      vector_add(testv, 5);
-      vector_add(testv, -1);
-      vector_add(testv, -2);
-      vector_add(testv, 3);
-      vector_add(testv, 4);
-      vector_add(testv, -5);
+  it("doubles, filters positives and reduces to the sum of elements", {
+    int *testv = NULL;
+    vector_add(testv, 1);
+    vector_add(testv, 2);
+    vector_add(testv, -3);
+    vector_add(testv, -4);
+    vector_add(testv, 5);
+    vector_add(testv, -1);
+    vector_add(testv, -2);
+    vector_add(testv, 3);
+    vector_add(testv, 4);
+    vector_add(testv, -5);
 
-      int *double_testv = NULL;
-      vector_map(testv, double_testv, double_item);
+    int *double_testv = NULL;
+    vector_map(testv, double_testv, double_item);
 
-      int *positive_double_testv = NULL;
-      vector_select(double_testv, positive_double_testv, positive_filter);
+    int *positive_double_testv = NULL;
+    vector_select(double_testv, positive_double_testv, positive_filter);
 
-      int sum;
-      vector_reduce(positive_double_testv, adder, &sum);
-      assert_that_int(sum equals to 30);
-    }
-  );
+    int sum = 0;
+    vector_reduce(positive_double_testv, adder, &sum);
+    assert_that_int(sum equals to 30);
+  });
 })

@@ -44,4 +44,50 @@ module(T_vector_push_pop_peek, {
       assert_that(vector_size(v) is 3);
     });
   });
+
+  describe("stack data structure", {
+    int *st = NULL;
+
+    it("asserts that a new vector is empty", {
+      assert_that(vector_is_empty(st));
+    });
+
+    it("pushes an element into the vector", {
+      vector_push(st, 0);
+      nassert_that(vector_is_empty(st));
+    });
+
+    it("pops an empty vector and returns NULL", {
+      assert_that_int(vector_pop(st) equals to 0);
+    });
+
+    it("is empty after 1 push and 1 pop", {
+      vector_push(st, 0);
+      int res = vector_pop(st);
+      assert_that(res is 0);
+      assert_that(vector_is_empty(st));
+    });
+
+    it("is not empty after 2 pushes and 1 pop", {
+      vector_push(st, 0);
+      vector_push(st, 0);
+      int res = vector_pop(st);
+      assert_that(res is 0);
+      nassert_that(vector_is_empty(st));
+    });
+
+    it("pops `x` after pushing `x`", {
+      vector_push(st, 99);
+      assert_that_int(vector_pop(st) equals to 99);
+      vector_push(st, 88);
+      assert_that_int(vector_pop(st) equals to 88);
+    });
+
+    it("pops `y` then `x` after pushing `x` then `y`", {
+      vector_push(st, 99);
+      vector_push(st, 88);
+      assert_that_int(vector_pop(st) equals to 88);
+      assert_that_int(vector_pop(st) equals to 99);
+    });
+  });
 })

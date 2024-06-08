@@ -68,9 +68,10 @@ typedef struct {
 #endif
 
 /**
- * @brief Macro helper for variadic arguments
+ * @brief Initializes an empty vector without adding an element
+ * @param self -> The vector to use
  */
-#define _vector_get_first_arg(first, ...) first
+#define vector_initialize(self) _vector_maybegrow(self, 1)
 
 /**
  * @brief Creates a new vector and initializes it with the given arguments.
@@ -83,16 +84,11 @@ typedef struct {
  * @param ... -> Initialization arguments
  * @return: The newly created vector
  */
+#define _vector_get_first_arg(first, ...) (first)
 #define vector_new(...)                                                                                                                                                                                                             \
   _Generic(_vector_get_first_arg(__VA_ARGS__, (void *)0), void *: _vector_voidptr_new, char *: _vector_charptr_new, const char *: _vector_charptr_new, int: _vector_int_new, long: _vector_long_new, default: _vector_voidptr_new)( \
     PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__                                                                                                                                                            \
   )
-
-/**
- * @brief Initializes an empty vector without adding an element
- * @param self -> The vector to use
- */
-#define vector_initialize(self) _vector_maybegrow(self, 1)
 
 /**
  * @brief Adds a new element in the vector
@@ -109,27 +105,15 @@ typedef struct {
  * @param item -> The item to add (usually byte sized like char*)
  * @param n -> The number with which to extend size
  */
-#define vector_add_n(self, item, n)           \
-  _vector_maybegrow(self, n);                 \
-  memmove(self + vector_size(self), item, n); \
-  _vector_get_header(self)->size += n;
-
-/**
- * @brief Set the value of a specific vector index to a new one
- * @param self -> The vector
- * @param index -> The index to set the value of
- * @param item -> The item to set the value as
- **/
-#define vector_set(self, index, item) \
-  (index < vector_size(self) ? (self)[index] = (item) : 0)
-
-/**
- * @brief Get the value of a specific vector index
- * @param self -> The vector to use
- * @param index -> The index to get the value of
- * @return The value
- **/
-#define vector_get(self, index) (self == NULL ? 0 : (self)[index])
+#define vector_add_n(self, item, n)                 \
+  ((item) != NULL ? _vector_maybegrow(self, n),     \
+   memmove(                                         \
+     (self) + vector_size(self),                    \
+     (item),                                        \
+     (n) * ((item) != NULL ? sizeof((self)[0]) : 0) \
+   ),                                               \
+   _vector_get_header(self)->size += n              \
+                  : 0)
 
 /**
  * @brief Delete a multiple values from the vector
@@ -139,7 +123,7 @@ typedef struct {
  **/
 #define vector_remove_n(self, index, number_of_elements)                 \
   (memmove(                                                              \
-     &(self)[index],                                                     \
+     &(self)[(index)],                                                   \
      &(self)[(index) + (number_of_elements)],                            \
      sizeof *(self) *                                                    \
        (_vector_get_header(self)->size - (number_of_elements) - (index)) \
@@ -164,6 +148,13 @@ typedef struct {
  * @param self -> The vector to use
  */
 #define vector_last(self) ((self)[_vector_get_header(self)->size - 1])
+
+/**
+ * @brief Checks if the vector is empty
+ * @param self -> The vector to check
+ * @return: true if the vector is empty, false otherwise
+ */
+#define vector_is_empty(self) (vector_size(self) == 0)
 
 /**
  * @brief Get the total number of values inserted in the vector

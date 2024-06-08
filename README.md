@@ -1,6 +1,6 @@
 # EmeraldsVector
 
-A dynamic list using fast memory management (golden ratio increase)
+A dynamic list using fast memory management.
 
 # Installation
 
@@ -19,22 +19,15 @@ A dynamic list using fast memory management (golden ratio increase)
 
 int main(void) {
   /* Create a new vector object */
-  EmeraldsVector *v = vector_new();
+  int **v = vector_new(1);
 
-  /* Add a void* value into the vector */
-  vector_add(v, (void*)1);
-  vector_add(v, (void*)"value"); /* Can hold heterogenous data */
+  vector_add(v, 2);
+  vector_add(v, 3);
 
-  printf("%s\n", (char*)vector_get(v, 1));
-  printf("%d\n", (long)vector_get(v, 0));
+  printf("%d\n", v[1]);
+  printf("%d\n", v[0]);
 }
 ```
-
-## Development
-
-- Provide a custom free function pointer for specific deallocations
-  (also to set a framework for an efficient garbage collector)
-- Figure out word size of machine for correct conversions
 
 ## Contributing
 

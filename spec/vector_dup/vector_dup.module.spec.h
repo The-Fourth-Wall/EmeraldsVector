@@ -29,9 +29,9 @@ module(T_vector_dup, {
     it("copies a vector with 3 elements", {
       assert_that_int(vector_size(dup) equals to 3);
       assert_that_int(vector_size(dup) equals to vector_size(v));
-      assert_that_int(vector_get(dup, 0) equals to 1);
-      assert_that_int(vector_get(dup, 2) equals to 4);
-      assert_that_int(vector_get(dup, 1) equals to 2);
+      assert_that_int(dup[0] equals to 1);
+      assert_that_int(dup[2] equals to 4);
+      assert_that_int(dup[1] equals to 2);
     });
 
     it("ensures the memory duplicate is a deep copy", {
@@ -40,10 +40,10 @@ module(T_vector_dup, {
       vector_remove(dup, 0);
 
       assert_that_int(vector_size(v) equals to 1);
-      assert_that_int(vector_get(v, 0) equals to 1);
+      assert_that_int(v[0] equals to 1);
       assert_that_int(vector_size(dup) equals to 2);
-      assert_that_int(vector_get(dup, 0) equals to 2);
-      assert_that_int(vector_get(dup, 1) equals to 4);
+      assert_that_int(dup[0] equals to 2);
+      assert_that_int(dup[1] equals to 4);
     });
   });
 })
