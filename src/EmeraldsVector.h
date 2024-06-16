@@ -1,5 +1,5 @@
 /**
- * A dynamic list using fast memory management (golden ratio increase).
+ * A dynamic list using fast memory management.
  *
  * Copyright (C) 2024 oblivious
  *
