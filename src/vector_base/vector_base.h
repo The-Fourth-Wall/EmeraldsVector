@@ -106,7 +106,7 @@ typedef struct {
  * @param n -> The number with which to extend size
  */
 #define vector_add_n(self, item, n)                 \
-  ((item) != NULL ? _vector_maybegrow(self, n),     \
+  ((item) != NULL ? _vector_maybegrow(self, n + 1), \
    memmove(                                         \
      (self) + vector_size(self),                    \
      (item),                                        \
