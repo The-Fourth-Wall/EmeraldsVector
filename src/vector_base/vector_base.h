@@ -125,7 +125,7 @@ typedef struct {
   (memmove(                                                              \
      &(self)[(index)],                                                   \
      &(self)[(index) + (number_of_elements)],                            \
-     sizeof *(self) *                                                    \
+     _vector_selfptr_size(self) *                                        \
        (_vector_get_header(self)->size - (number_of_elements) - (index)) \
    ),                                                                    \
    _vector_get_header(self)->size -= (number_of_elements))
