@@ -1,5 +1,6 @@
 #include "../../libs/cSpec/export/cSpec.h"
 #include "../../src/vector_base/vector_base.h"
+#include "../../src/vector_dup/vector_dup.h"
 
 static void _external_vector_add(int **self, int value) {
   vector_add(*self, value);
@@ -158,6 +159,31 @@ module(T_vector_base, {
         assert_that_int(vv[2] equals to 3);
         assert_that_int(vv[3] equals to 4);
         assert_that_int(vv[4] equals to 5);
+      });
+
+      it("adds multiple strings to a vector of strings", {
+        char **vv = NULL;
+        vector_add(vv, (char *)"a");
+        vector_add(vv, (char *)"b");
+        vector_add(vv, (char *)"c");
+        assert_that_charptr(vv[0] equals to "a");
+        assert_that_charptr(vv[1] equals to "b");
+        assert_that_charptr(vv[2] equals to "c");
+
+        char **vv2 = NULL;
+        vector_dup(vv, vv2);
+        assert_that_charptr(vv2[0] equals to "a");
+        assert_that_charptr(vv2[1] equals to "b");
+        assert_that_charptr(vv2[2] equals to "c");
+
+        vector_add_n(vv2, vv, vector_size(vv));
+        assert_that_int(vector_size(vv2) equals to 6);
+        assert_that_charptr(vv2[0] equals to "a");
+        assert_that_charptr(vv2[1] equals to "b");
+        assert_that_charptr(vv2[2] equals to "c");
+        assert_that_charptr(vv2[3] equals to "a");
+        assert_that_charptr(vv2[4] equals to "b");
+        assert_that_charptr(vv2[5] equals to "c");
       });
     });
 
