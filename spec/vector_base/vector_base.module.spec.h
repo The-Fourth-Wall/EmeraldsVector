@@ -187,6 +187,51 @@ module(T_vector_base, {
       });
     });
 
+    context("#vector_add_vector", {
+      it("adds a vector to the end of the vector", {
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_add(vv, 2);
+        vector_add_vector(vv, vv);
+        assert_that_int(vector_size(vv) equals to 4);
+        assert_that_int(vv[0] equals to 1);
+        assert_that_int(vv[1] equals to 2);
+        assert_that_int(vv[2] equals to 1);
+        assert_that_int(vv[3] equals to 2);
+      });
+
+      it("adds a vector and its duplicate to the end of the vector", {
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_add(vv, 2);
+        int *vv2 = NULL;
+        vector_dup(vv, vv2);
+        vector_add_vector(vv, vv2);
+        assert_that_int(vector_size(vv) equals to 4);
+        assert_that_int(vv[0] equals to 1);
+        assert_that_int(vv[1] equals to 2);
+        assert_that_int(vv[2] equals to 1);
+        assert_that_int(vv[3] equals to 2);
+      });
+
+      it("adds two different vectors to the end of the vector", {
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_add(vv, 2);
+        int *vv2 = NULL;
+        vector_add(vv2, 3);
+        vector_add(vv2, 4);
+        vector_add(vv2, 5);
+        vector_add_vector(vv, vv2);
+        assert_that_int(vector_size(vv) equals to 5);
+        assert_that_int(vv[0] equals to 1);
+        assert_that_int(vv[1] equals to 2);
+        assert_that_int(vv[2] equals to 3);
+        assert_that_int(vv[3] equals to 4);
+        assert_that_int(vv[4] equals to 5);
+      });
+    });
+
     context("on setting elements in a vector", {
       it("sets the third element to the double of the previous value", {
         v[2] = v[2] * 2;

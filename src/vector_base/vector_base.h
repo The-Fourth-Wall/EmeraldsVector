@@ -116,6 +116,14 @@ typedef struct {
                   : 0)
 
 /**
+ * @brief Adds a vector to the end of the vector
+ * @param self -> The vector to use
+ * @param item -> The vector to add
+ */
+#define vector_add_vector(self, item) \
+  vector_add_n(self, item, vector_size(item))
+
+/**
  * @brief Delete a multiple values from the vector
  * @param self -> The vector to use
  * @param index -> The index to start
