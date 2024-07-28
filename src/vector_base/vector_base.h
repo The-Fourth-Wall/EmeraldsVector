@@ -74,6 +74,17 @@ typedef struct {
 #define vector_initialize(self) _vector_maybegrow(self, 1)
 
 /**
+ * @brief Initializes a vector with a given size
+ * @param v -> The vector to initialize
+ * @param n -> The size of the vector
+ */
+#define vector_initialize_n(v, n)    \
+  do {                               \
+    _vector_maybegrow(v, n);         \
+    _vector_get_header(v)->size = n; \
+  } while(0)
+
+/**
  * @brief Creates a new vector and initializes it with the given arguments.
  * Using generic to have type-safe interaction for defined types of vectors.
  * We add a void* value as an extra argument to the variadics to allow for a

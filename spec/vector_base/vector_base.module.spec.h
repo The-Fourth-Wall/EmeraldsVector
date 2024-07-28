@@ -109,6 +109,31 @@ module(T_vector_base, {
       });
     });
 
+    context("#vector_initialize_n", {
+      it("initializes a vector with a given size", {
+        int *vv = NULL;
+        vector_initialize_n(vv, 3);
+        assert_that_int(vector_size(vv) equals to 3);
+        assert_that_int(vector_capacity(vv) equals to 4);
+        assert_that_int(vv[0] equals to 0);
+        assert_that_int(vv[1] equals to 0);
+        assert_that_int(vv[2] equals to 0);
+      });
+
+      it("initializes a vector of 16 elements", {
+        int *vv = NULL;
+        vector_initialize_n(vv, 16);
+        assert_that_int(vector_size(vv) equals to 16);
+        assert_that_int(vector_capacity(vv) equals to 16);
+        vector_add(vv, 1);
+        assert_that_int(vector_size(vv) equals to 17);
+        assert_that_int(vector_capacity(vv) equals to 32);
+        assert_that_int(vv[0] equals to 0);
+        assert_that_int(vv[15] equals to 0);
+        assert_that_int(vv[16] equals to 1);
+      });
+    });
+
     context("on external vector add", {
       it("adds an element to an uninitialized vector", {
         int *vv = NULL;
