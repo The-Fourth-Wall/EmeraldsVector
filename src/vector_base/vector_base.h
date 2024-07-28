@@ -6,7 +6,7 @@
 #include <stdarg.h> /* va_list, va_arg, va_start, va_end */
 #include <stddef.h> /* ptrdiff_t */
 #include <stdlib.h> /* NULL, realloc */
-#include <string.h> /* memmove */
+#include <string.h> /* memmove, memset */
 
 /**
  * @brief Metadata for a vector.  Stores the size and capacity
@@ -78,10 +78,11 @@ typedef struct {
  * @param v -> The vector to initialize
  * @param n -> The size of the vector
  */
-#define vector_initialize_n(v, n)    \
-  do {                               \
-    _vector_maybegrow(v, n);         \
-    _vector_get_header(v)->size = n; \
+#define vector_initialize_n(v, n)         \
+  do {                                    \
+    _vector_maybegrow(v, n);              \
+    _vector_get_header(v)->size = (n);    \
+    memset((v), 0, (n) * sizeof((v)[0])); \
   } while(0)
 
 /**
