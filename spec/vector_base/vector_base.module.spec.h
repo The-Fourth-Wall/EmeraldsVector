@@ -170,7 +170,7 @@ module(T_vector_base, {
       it("adds multiple elements to a vector", {
         char *vv       = NULL;
         const char *s1 = "1234";
-        vector_add_n(vv, s1, 4);
+        vector_add_n(vv, s1, 5);
         assert_that_charptr(vv equals to "1234");
       });
 
