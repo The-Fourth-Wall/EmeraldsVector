@@ -170,8 +170,10 @@ module(T_vector_base, {
       it("adds multiple elements to a vector", {
         char *vv       = NULL;
         const char *s1 = "1234";
-        vector_add_n(vv, s1, 5);
+        vector_add_n(vv, s1, 4);
         assert_that_charptr(vv equals to "1234");
+        vector_add_n(vv, s1, 4);
+        assert_that_charptr(vv equals to "12341234");
       });
 
       it("adds multiple integers to a vector", {
@@ -275,6 +277,13 @@ module(T_vector_base, {
     });
 
     context("on removing elements from a vector", {
+      it("removes characters from a string", {
+        char *vv = NULL;
+        vector_add_n(vv, "abcde", 5);
+        vector_remove_n(vv, 1, 3);
+        assert_that_charptr(vv equals to "ae");
+      });
+
       it("removes multiple elements from a vector", {
         int *vv = NULL;
         vector_add(vv, 1);

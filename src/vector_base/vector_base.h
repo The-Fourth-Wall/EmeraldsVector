@@ -117,15 +117,25 @@ typedef struct {
  * @param item -> The item to add (usually byte sized like char*)
  * @param n -> The number with which to extend size
  */
-#define vector_add_n(self, item, n)                 \
-  ((item) != NULL ? _vector_maybegrow(self, n),     \
-   memmove(                                         \
-     (self) + vector_size(self),                    \
-     (item),                                        \
-     (n) * ((item) != NULL ? sizeof((self)[0]) : 0) \
-   ),                                               \
-   _vector_get_header(self)->size += n              \
-                  : 0)
+#define _vector_get_first_arg(first, ...) (first)
+#define _vector_is_charptr(self) \
+  _Generic(_vector_get_first_arg(self[0], (void *)0), char: 1, default: 0)
+#define vector_add_n(self, item, n)                                       \
+  (_vector_is_charptr(self) && vector_size(self) > 0                      \
+     ? _vector_get_header(vv)->size--                                     \
+     : 0),                                                                \
+    ((item) != NULL                                                       \
+     ? _vector_maybegrow(self, _vector_is_charptr(self) ? (n) + 1 : (n)), \
+     memmove(                                                             \
+       (self) + vector_size(self),                                        \
+       (item),                                                            \
+       _vector_is_charptr(self)                                           \
+         ? (n) + 1                                                        \
+         : (n) * ((item) != NULL ? sizeof((self)[0]) : 0)                 \
+     ),                                                                   \
+     _vector_get_header(self)->size +=                                    \
+     _vector_is_charptr(self) ? (n) + 1 : (n)                             \
+     : 0)
 
 /**
  * @brief Adds a vector to the end of the vector
