@@ -118,7 +118,7 @@ typedef struct {
  * @param n -> The number with which to extend size
  */
 #define vector_add_n(self, item, n)                 \
-  ((item) != NULL ? _vector_maybegrow(self, n + 1), \
+  ((item) != NULL ? _vector_maybegrow(self, n),     \
    memmove(                                         \
      (self) + vector_size(self),                    \
      (item),                                        \
@@ -218,7 +218,7 @@ typedef struct {
 static void *
 _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
   void *b;
-  size_t min_len = vector_size_signed(self) + addlen;
+  size_t min_len = vector_size(self) + addlen;
 
   if(min_len > min_cap) {
     min_cap = min_len;
