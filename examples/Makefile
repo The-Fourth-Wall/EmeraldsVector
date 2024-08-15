@@ -23,4 +23,4 @@ default: make_library
 
 clean:
 	cd .. && em clean && cd examples
-	rm -rf $(OUTPUT)
+	$(RM) -r ./*.dSYM $(OUTPUT)
