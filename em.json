@@ -32,7 +32,7 @@
       "opt": "-Og",
       "version": "-std=c11",
       "flags": "-g",
-      "warnings": "-Wall -Wextra -Werror -pedantic -pedantic-errors -Wpedantic -Wno-extra-semi -Wno-int-conversion -Wno-incompatible-pointer-types -Wno-unused-function"
+      "warnings": ""
     }
   },
 

@@ -67,11 +67,11 @@ typedef struct {
   #define vector_allocator realloc
 #endif
 
-/**
- * @brief Initializes an empty vector without adding an element
- * @param self -> The vector to use
- */
-#define vector_initialize(self) _vector_maybegrow(self, 1)
+#define vector_initialize(self) \
+  do {                          \
+    (self) = NULL;              \
+    _vector_maybegrow(self, 1); \
+  } while(0)
 
 /**
  * @brief Initializes a vector with a given size
@@ -80,6 +80,7 @@ typedef struct {
  */
 #define vector_initialize_n(v, n)         \
   do {                                    \
+    (v) = NULL;                           \
     _vector_maybegrow(v, n);              \
     _vector_get_header(v)->size = (n);    \
     memset((v), 0, (n) * sizeof((v)[0])); \
@@ -249,31 +250,10 @@ _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
   return b;
 }
 
-/**
- * @brief: Initializes a vector data structure
- * @param type -> The type for the initialization of the vector
- * @param name -> The name of the function to create
- * @return: The newly created vector
- */
-#define _vector_new(type, cast_type, name)               \
-  static type *_vector_##name##_new(size_t argc, ...) {  \
-    type *self = NULL;                                   \
-                                                         \
-    va_list vars;                                        \
-    va_start(vars, argc)                                 \
-      ;                                                  \
-      for(size_t i = 0; i < argc; i++) {                 \
-        vector_add(self, (type)va_arg(vars, cast_type)); \
-      }                                                  \
-    va_end(vars);                                        \
-                                                         \
-    return self;                                         \
-  }
-
-_vector_new(char, int, char);
-_vector_new(void *, void *, voidptr);
-_vector_new(char *, char *, charptr);
-_vector_new(int, int, int);
-_vector_new(long, long, long);
+char *_vector_char_new(size_t argc, ...);
+void **_vector_voidptr_new(size_t argc, ...);
+char **_vector_charptr_new(size_t argc, ...);
+int *_vector_int_new(size_t argc, ...);
+long *_vector_long_new(size_t argc, ...);
 
 #endif
