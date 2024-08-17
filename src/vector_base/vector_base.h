@@ -216,7 +216,7 @@ typedef struct {
   ((void)((self) ? vector_allocator(_vector_get_header(self), 0) : 0), \
    (self) = NULL)
 
-static void *
+static inline void *
 _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
   void *b;
   size_t min_len = vector_size(self) + addlen;
