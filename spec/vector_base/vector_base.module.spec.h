@@ -1,4 +1,5 @@
 #include "../../libs/cSpec/export/cSpec.h"
+#include "../../libs/EmeraldsBool/export/EmeraldsBool.h"
 #include "../../src/vector_base/vector_base.h"
 #include "../../src/vector_dup/vector_dup.h"
 
