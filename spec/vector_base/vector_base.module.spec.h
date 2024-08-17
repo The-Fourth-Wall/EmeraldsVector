@@ -265,15 +265,6 @@ module(T_vector_base, {
       it("sets the third element to the double of the previous value", {
         v[2] = v[2] * 2;
         assert_that_int(v[2] equals to c * 2);
-      });
-
-      it("tries to set an element out of bounds without increasing the size", {
-        v[9999] = 123;
-        assert_that_int(v[9999] equals to 123);
-        assert_that_int(vector_size(v) equals to 3);
-
-        v[-42] = 456;
-        assert_that_int(v[-42] equals to 456);
         assert_that_int(vector_size(v) equals to 3);
       });
     });

@@ -19,7 +19,7 @@
     "debug": {
       "opt": "-Og",
       "version": "-std=c11",
-      "flags": "-g",
+      "flags": "-g -fsanitize=address",
       "warnings": "-Wall -Wextra -Werror -pedantic -pedantic-errors -Wpedantic"
     },
     "release": {
@@ -31,7 +31,7 @@
     "test": {
       "opt": "-Og",
       "version": "-std=c11",
-      "flags": "-g",
+      "flags": "-g -fsanitize=address",
       "warnings": "-Wall -Wextra -Werror -pedantic -pedantic-errors -Wpedantic"
     }
   },
