@@ -97,10 +97,38 @@ typedef struct {
  * @param ... -> Initialization arguments
  * @return: The newly created vector
  */
-#define _vector_get_first_arg(first, ...) (first)
-#define vector_new(...)                                                                                                                                                                                                                                     \
-  _Generic(_vector_get_first_arg(__VA_ARGS__, (void *)0), void *: _vector_voidptr_new, char *: _vector_charptr_new, const char *: _vector_charptr_new, int: _vector_int_new, char: _vector_char_new, long: _vector_long_new, default: _vector_voidptr_new)( \
-    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__                                                                                                                                                                                    \
+
+#if __STDC_VERSION__ >= 201112L
+  #define _vector_get_first_arg(first, ...) (first)
+  #define vector_new(...)                                                                                                                                                                                                                                     \
+    _Generic(_vector_get_first_arg(__VA_ARGS__, (void *)0), void *: _vector_voidptr_new, char *: _vector_charptr_new, const char *: _vector_charptr_new, int: _vector_int_new, char: _vector_char_new, long: _vector_long_new, default: _vector_voidptr_new)( \
+      PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__                                                                                                                                                                                    \
+    )
+#endif
+
+#define vector_string_new(...)                                           \
+  _vector_charptr_new(                                                   \
+    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+  )
+#define vector_charptr_new(...)                                          \
+  _vector_charptr_new(                                                   \
+    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+  )
+#define vector_voidptr_new(...)                                          \
+  _vector_voidptr_new(                                                   \
+    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+  )
+#define vector_int_new(...)                                              \
+  _vector_int_new(                                                       \
+    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+  )
+#define vector_char_new(...)                                             \
+  _vector_char_new(                                                      \
+    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+  )
+#define vector_long_new(...)                                             \
+  _vector_long_new(                                                      \
+    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
   )
 
 /**
