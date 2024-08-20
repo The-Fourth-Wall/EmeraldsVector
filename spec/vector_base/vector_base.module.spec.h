@@ -7,60 +7,6 @@ static void _external_vector_add(int **self, int value) {
   vector_add(*self, value);
 }
 
-static void context_on_vector_new(void) {
-#if __STDC_VERSION__ >= 201112L
-  context("#vector_new", {
-    it("initializes a new vector with 1 element", {
-      int *vv = vector_new(1);
-      assert_that_int(vector_size(vv) equals to 1);
-      assert_that_int(vv[0] equals to 1);
-    });
-
-    it("initializes a new vector with 3 elements", {
-      char **vv = vector_new("A", "B", "C");
-      assert_that_int(vector_size(vv) equals to 3);
-      assert_that_charptr(vv[0] equals to "A");
-      assert_that_charptr(vv[1] equals to "B");
-      assert_that_charptr(vv[2] equals to "C");
-    });
-
-    it("creates a char* vector with `new`", {
-      char **cv = vector_new("a", "b", "c");
-      assert_that_int(vector_size(cv) equals to 3);
-      assert_that_charptr(cv[0] equals to "a");
-      assert_that_charptr(cv[1] equals to "b");
-      assert_that_charptr(cv[2] equals to "c");
-    });
-
-    it("creates a new vector with 1 element", {
-      int *vv = vector_new(1);
-      assert_that_int(vector_size(vv) equals to 1);
-      assert_that_int(vv[0] equals to 1);
-    });
-
-    it("creates new vectors but using variables instead of literals", {
-      int a   = 1;
-      int b   = 2;
-      int c   = 3;
-      int *vv = vector_new(a, b, c);
-      assert_that_int(vector_size(vv) equals to 3);
-      assert_that_int(vv[0] equals to 1);
-      assert_that_int(vv[1] equals to 2);
-      assert_that_int(vv[2] equals to 3);
-
-      const char *aa = "a";
-      const char *bb = "b";
-      const char *cc = "c";
-      char **cv      = vector_new(aa, bb, cc);
-      assert_that_int(vector_size(cv) equals to 3);
-      assert_that_charptr(cv[0] equals to "a");
-      assert_that_charptr(cv[1] equals to "b");
-      assert_that_charptr(cv[2] equals to "c");
-    });
-  });
-#endif
-}
-
 module(T_vector_base, {
   describe("vector", {
     int *v = NULL;
@@ -99,7 +45,55 @@ module(T_vector_base, {
       assert_that_int(vv[2] equals to 789);
     });
 
-    context_on_vector_new();
+    context("#vector_new", {
+      it("initializes a new vector with 1 element", {
+        int *vv = vector_new(1);
+        assert_that_int(vector_size(vv) equals to 1);
+        assert_that_int(vv[0] equals to 1);
+      });
+
+      it("initializes a new vector with 3 elements", {
+        char **vv = vector_new("A", "B", "C");
+        assert_that_int(vector_size(vv) equals to 3);
+        assert_that_charptr(vv[0] equals to "A");
+        assert_that_charptr(vv[1] equals to "B");
+        assert_that_charptr(vv[2] equals to "C");
+      });
+
+      it("creates a char* vector with `new`", {
+        char **cv = vector_new("a", "b", "c");
+        assert_that_int(vector_size(cv) equals to 3);
+        assert_that_charptr(cv[0] equals to "a");
+        assert_that_charptr(cv[1] equals to "b");
+        assert_that_charptr(cv[2] equals to "c");
+      });
+
+      it("creates a new vector with 1 element", {
+        int *vv = vector_new(1);
+        assert_that_int(vector_size(vv) equals to 1);
+        assert_that_int(vv[0] equals to 1);
+      });
+
+      it("creates new vectors but using variables instead of literals", {
+        int a   = 1;
+        int b   = 2;
+        int c   = 3;
+        int *vv = vector_new(a, b, c);
+        assert_that_int(vector_size(vv) equals to 3);
+        assert_that_int(vv[0] equals to 1);
+        assert_that_int(vv[1] equals to 2);
+        assert_that_int(vv[2] equals to 3);
+
+        const char *aa = "a";
+        const char *bb = "b";
+        const char *cc = "c";
+        char **cv      = vector_new(aa, bb, cc);
+        assert_that_int(vector_size(cv) equals to 3);
+        assert_that_charptr(cv[0] equals to "a");
+        assert_that_charptr(cv[1] equals to "b");
+        assert_that_charptr(cv[2] equals to "c");
+      });
+    });
 
     context("#vector_add", {
       it("adds exactly three elements to the vector", {
@@ -330,7 +324,14 @@ module(T_vector_base, {
       });
 
       it("deletes multiple elements starting from an index", {
-        int *vv = vector_int_new(1, 2, 3, 4, 5, 6, 7);
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_add(vv, 2);
+        vector_add(vv, 3);
+        vector_add(vv, 4);
+        vector_add(vv, 5);
+        vector_add(vv, 6);
+        vector_add(vv, 7);
         vector_remove_n(vv, 2, 4);
         assert_that_int(vector_size(vv) equals to 3);
         assert_that_int(vv[0] equals to 1);
@@ -371,7 +372,10 @@ module(T_vector_base, {
     });
 
     it("grabs the last element on the vector and returns it", {
-      int *vv = vector_int_new(1, 2, 3);
+      int *vv = NULL;
+      vector_add(vv, 1);
+      vector_add(vv, 2);
+      vector_add(vv, 3);
       assert_that_int(vector_last(vv) equals to 3);
     });
 
@@ -384,7 +388,10 @@ module(T_vector_base, {
 
     context("on getting header elements: capacity and size", {
       it("gets the current total capacity of the vector", {
-        int *vv = vector_int_new(1, 2, 3);
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_add(vv, 2);
+        vector_add(vv, 3);
         assert_that_int(vector_capacity(vv) equals to 4);
         vector_add(vv, 42);
         vector_add(vv, 43);
@@ -392,17 +399,26 @@ module(T_vector_base, {
       });
 
       it("gets the current total capacity of the vector (signed)", {
-        int *vv = vector_int_new(1, 2, 3);
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_add(vv, 2);
+        vector_add(vv, 3);
         assert_that_int(vector_capacity_signed(vv) equals to 4);
       });
 
       it("gets the current total size of the vector", {
-        int *vv = vector_int_new(1, 2, 3);
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_add(vv, 2);
+        vector_add(vv, 3);
         assert_that_int(vector_size(vv) equals to 3);
       });
 
       it("gets the current total size of the vector (signed)", {
-        int *vv = vector_int_new(1, 2, 3);
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_add(vv, 2);
+        vector_add(vv, 3);
         assert_that_int(vector_size_signed(vv) equals to 3);
       });
     });

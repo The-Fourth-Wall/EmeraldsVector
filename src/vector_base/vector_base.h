@@ -32,7 +32,7 @@ typedef struct {
  * @param self -> The vector pointer
  * @return The sizeof the vector element
  */
-#define _vector_selfptr_size(self) sizeof(*(self)) // NOLINT
+#define _vector_selfptr_size(self) sizeof(*(self)) /* NOLINT */
 
 /**
  * @brief A grow function that grows the vector by a given number of elements.
@@ -60,8 +60,8 @@ typedef struct {
      ? (_vector_grow(self, n), 0)                                              \
      : 0)
 
-// TODO - Add an allocator struct that can be generic for use
-// TODO - Potentially adding a GC in the custom allocator
+/* TODO - Add an allocator struct that can be generic for use */
+/* TODO - Potentially adding a GC in the custom allocator */
 /** @brief Custom allocator.  Can be overridden by user before including */
 #ifndef vector_allocator
   #define vector_allocator realloc
@@ -86,19 +86,18 @@ typedef struct {
     memset((v), 0, (n) * sizeof((v)[0])); \
   } while(0)
 
-/**
- * @brief Creates a new vector and initializes it with the given arguments.
- * Using generic to have type-safe interaction for defined types of vectors.
- * We add a void* value as an extra argument to the variadics to allow for a
- * potential of a vector with 1 element.  In any case vector_new should be typed
- * and initialized properly by recognizing the first argument for the generic
- * choice.  Since its all macros it is possible to have any type even if
- * __VA_ARGS__ do not contain void*.
- * @param ... -> Initialization arguments
- * @return: The newly created vector
- */
-
-#if __STDC_VERSION__ >= 201112L
+#if PREPROCESSOR_C_VERSION >= 2011
+  /**
+   * @brief Creates a new vector and initializes it with the given arguments.
+   * Using generic to have type-safe interaction for defined types of vectors.
+   * We add a void* value as an extra argument to the variadics to allow for a
+   * potential of a vector with 1 element.  In any case vector_new should be
+   * typed and initialized properly by recognizing the first argument for the
+   * generic choice.  Since its all macros it is possible to have any type even
+   * if __VA_ARGS__ do not contain void*.
+   * @param ... -> Initialization arguments
+   * @return: The newly created vector
+   */
   #define _vector_get_first_arg(first, ...) (first)
   #define vector_new(...)                                                                                                                                                                                                                                     \
     _Generic(_vector_get_first_arg(__VA_ARGS__, (void *)0), void *: _vector_voidptr_new, char *: _vector_charptr_new, const char *: _vector_charptr_new, int: _vector_int_new, char: _vector_char_new, long: _vector_long_new, default: _vector_voidptr_new)( \
@@ -106,30 +105,37 @@ typedef struct {
     )
 #endif
 
-#define vector_string_new(...)                                           \
-  _vector_charptr_new(                                                   \
-    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
-  )
-#define vector_charptr_new(...)                                          \
-  _vector_charptr_new(                                                   \
-    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
-  )
-#define vector_voidptr_new(...)                                          \
-  _vector_voidptr_new(                                                   \
-    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
-  )
-#define vector_int_new(...)                                              \
-  _vector_int_new(                                                       \
-    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
-  )
-#define vector_char_new(...)                                             \
-  _vector_char_new(                                                      \
-    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
-  )
-#define vector_long_new(...)                                             \
-  _vector_long_new(                                                      \
-    PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
-  )
+#if PREPROCESSOR_C_VERSION >= 1999
+  #define vector_string_new(...)                                           \
+    _vector_charptr_new(                                                   \
+      PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+    )
+  #define vector_charptr_new(...)                                          \
+    _vector_charptr_new(                                                   \
+      PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+    )
+  #define vector_voidptr_new(...)                                          \
+    _vector_voidptr_new(                                                   \
+      PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+    )
+  #define vector_int_new(...)                                              \
+    _vector_int_new(                                                       \
+      PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+    )
+  #define vector_char_new(...)                                             \
+    _vector_char_new(                                                      \
+      PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+    )
+  #define vector_long_new(...)                                             \
+    _vector_long_new(                                                      \
+      PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
+    )
+char *_vector_char_new(size_t argc, ...);
+void **_vector_voidptr_new(size_t argc, ...);
+char **_vector_charptr_new(size_t argc, ...);
+int *_vector_int_new(size_t argc, ...);
+long *_vector_long_new(size_t argc, ...);
+#endif
 
 /**
  * @brief Adds a new element in the vector
@@ -244,44 +250,6 @@ typedef struct {
   ((void)((self) ? vector_allocator(_vector_get_header(self), 0) : 0), \
    (self) = NULL)
 
-static inline void *
-_vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
-  void *b;
-  size_t min_len = vector_size(self) + addlen;
-
-  if(min_len > min_cap) {
-    min_cap = min_len;
-  }
-
-  if(min_cap <= vector_capacity(self)) {
-    return self;
-  }
-
-  if(min_cap < 2 * vector_capacity(self)) {
-    min_cap = 2 * vector_capacity(self);
-  } else if(min_cap < 4) {
-    min_cap = 4;
-  }
-
-  b = vector_allocator(
-    (self) ? _vector_get_header(self) : 0,
-    elemsize * min_cap + sizeof(_vector_header)
-  );
-  b = (char *)b + sizeof(_vector_header);
-
-  if(self == NULL) {
-    _vector_get_header(b)->size = 0;
-  }
-
-  _vector_get_header(b)->capacity = min_cap;
-
-  return b;
-}
-
-char *_vector_char_new(size_t argc, ...);
-void **_vector_voidptr_new(size_t argc, ...);
-char **_vector_charptr_new(size_t argc, ...);
-int *_vector_int_new(size_t argc, ...);
-long *_vector_long_new(size_t argc, ...);
+void *_vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap);
 
 #endif
