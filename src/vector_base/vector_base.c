@@ -46,6 +46,8 @@ long *_vector_long_new(size_t argc, ...) {
   return self;
 }
 
+#endif
+
 void *
 _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
   void *b;
@@ -79,5 +81,3 @@ _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
 
   return b;
 }
-
-#endif
