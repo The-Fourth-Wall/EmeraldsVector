@@ -435,5 +435,33 @@ module(T_vector_base, {
         assert_that(true is true);
       });
     });
+
+    context("#vector_display", {
+      it("prints an empty vector", {
+        int *vv = NULL;
+        vector_display(vv, "%d");
+      });
+
+      it("prints a vector with one element", {
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_display(vv, "%d");
+      });
+
+      it("prints a vector with two elements", {
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_add(vv, 2);
+        vector_display(vv, "%d");
+      });
+
+      it("prints a vector with three elements", {
+        int *vv = NULL;
+        vector_add(vv, 1);
+        vector_add(vv, 2);
+        vector_add(vv, 3);
+        vector_display(vv, "%d");
+      });
+    });
   });
 })

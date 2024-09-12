@@ -252,4 +252,24 @@ long *_vector_long_new(size_t argc, ...);
 
 void *_vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap);
 
+/**
+ * @brief Prints all elements of the vector
+ * @param self -> The vector to print
+ * @param format -> The format string to use
+ */
+#define vector_display(self, format)   \
+  do {                                 \
+    size_t i;                          \
+    size_t vsize = vector_size(self);  \
+    if(vsize > 0) {                    \
+      printf("[");                     \
+      for(i = 0; i < vsize - 1; i++) { \
+        printf(format, self[i]);       \
+        printf(", ");                  \
+      }                                \
+      printf(format, self[vsize - 1]); \
+      printf("]\n");                   \
+    }                                  \
+  } while(0)
+
 #endif

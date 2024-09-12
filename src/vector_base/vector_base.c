@@ -2,6 +2,8 @@
 
 #include "../../libs/EmeraldsPreprocessor/export/EmeraldsPreprocessor.h"
 
+#include <stdio.h>
+
 #if PREPROCESSOR_C_VERSION >= 1999
   /**
    * @brief: Initializes a vector data structure
