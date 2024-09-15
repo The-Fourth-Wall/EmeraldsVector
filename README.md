@@ -1,6 +1,6 @@
 # EmeraldsVector
 
-A dynamic list using fast memory management.
+A fast single file dynamic list with optional generics
 
 # Installation
 
@@ -8,7 +8,7 @@ A dynamic list using fast memory management.
 
 `em list`
 `em install`
-`em build lib`
+`em build lib release`
 
 ## Usage
 

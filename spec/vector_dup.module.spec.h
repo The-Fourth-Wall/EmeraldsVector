@@ -1,5 +1,5 @@
-#include "../../libs/cSpec/export/cSpec.h"
-#include "../../src/vector_dup/vector_dup.h"
+#include "../libs/cSpec/export/cSpec.h"
+#include "../src/EmeraldsVector.h"
 
 static int *v   = NULL;
 static int *dup = NULL;

@@ -1,5 +1,5 @@
-#include "../../libs/cSpec/export/cSpec.h"
-#include "../../src/vector_push_pop_peek/vector_push_pop_peek.h"
+#include "../libs/cSpec/export/cSpec.h"
+#include "../src/EmeraldsVector.h"
 
 module(T_vector_push_pop_peek, {
   describe("#push", {
