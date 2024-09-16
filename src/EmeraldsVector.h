@@ -218,7 +218,7 @@ typedef struct {
   ((void)((self) ? vector_allocator(_vector_get_header(self), 0) : 0), \
    (self) = NULL)
 
-p_inline static void *
+p_inline void *
 _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
   void *b;
   size_t min_len = vector_size(self) + addlen;
@@ -313,27 +313,27 @@ _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
     _vector_long_new(                                                      \
       PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
     )
-p_inline static char *_vector_char_new(size_t argc, ...) {
+p_inline char *_vector_char_new(size_t argc, ...) {
   char *self = NULL;
   _vector_new(self, char, int, argc);
   return self;
 }
-p_inline static void **_vector_voidptr_new(size_t argc, ...) {
+p_inline void **_vector_voidptr_new(size_t argc, ...) {
   void **self = NULL;
   _vector_new(self, void *, void *, argc);
   return self;
 }
-p_inline static char **_vector_charptr_new(size_t argc, ...) {
+p_inline char **_vector_charptr_new(size_t argc, ...) {
   char **self = NULL;
   _vector_new(self, char *, char *, argc);
   return self;
 }
-p_inline static int *_vector_int_new(size_t argc, ...) {
+p_inline int *_vector_int_new(size_t argc, ...) {
   int *self = NULL;
   _vector_new(self, int, int, argc);
   return self;
 }
-p_inline static long *_vector_long_new(size_t argc, ...) {
+p_inline long *_vector_long_new(size_t argc, ...) {
   long *self = NULL;
   _vector_new(self, long, long, argc);
   return self;
