@@ -86,24 +86,18 @@ typedef struct {
   #define vector_allocator realloc
 #endif
 
-#define vector_initialize(self) \
-  do {                          \
-    (self) = NULL;              \
-    _vector_maybegrow(self, 1); \
-  } while(0)
+#define vector_initialize(self) ((self) = NULL, _vector_maybegrow(self, 1))
 
 /**
  * @brief Initializes a vector with a given size
  * @param v -> The vector to initialize
  * @param n -> The size of the vector
  */
-#define vector_initialize_n(v, n)         \
-  do {                                    \
-    (v) = NULL;                           \
-    _vector_maybegrow(v, n);              \
-    _vector_get_header(v)->size = (n);    \
-    memset((v), 0, (n) * sizeof((v)[0])); \
-  } while(0)
+#define vector_initialize_n(v, n)     \
+  ((v) = NULL,                        \
+   _vector_maybegrow(v, n),           \
+   _vector_get_header(v)->size = (n), \
+   memset((v), 0, (n) * sizeof((v)[0])))
 
 /**
  * @brief Adds a new element in the vector
