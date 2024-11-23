@@ -93,11 +93,11 @@ typedef struct {
  * @param v -> The vector to initialize
  * @param n -> The size of the vector
  */
-#define vector_initialize_n(v, n)     \
-  ((v) = NULL,                        \
-   _vector_maybegrow(v, n),           \
-   _vector_get_header(v)->size = (n), \
-   memset((v), 0, (n) * sizeof((v)[0])))
+#define vector_initialize_n(self, n)     \
+  ((self) = NULL,                        \
+   _vector_maybegrow(self, n),           \
+   _vector_get_header(self)->size = (n), \
+   memset((self), 0, (n) * sizeof((self)[0])))
 
 /**
  * @brief Adds a new element in the vector
@@ -259,9 +259,23 @@ _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
    * @return: The newly created vector
    */
   #define _vector_get_first_arg(first, ...) (first)
-  #define vector_new(...)                                                                                                                                                                                                                                     \
-    _Generic(_vector_get_first_arg(__VA_ARGS__, (void *)0), void *: _vector_voidptr_new, char *: _vector_charptr_new, const char *: _vector_charptr_new, int: _vector_int_new, char: _vector_char_new, long: _vector_long_new, default: _vector_voidptr_new)( \
-      PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__                                                                                                                                                                                    \
+  #define _vector_new_dispatch(type, func, ...) \
+    func(PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__)
+
+  #define vector_new(...)                                \
+    _vector_new_dispatch(                                \
+      _vector_get_first_arg(__VA_ARGS__, (void *)0),     \
+      _Generic(                                          \
+        (_vector_get_first_arg(__VA_ARGS__, (void *)0)), \
+        void *: _vector_voidptr_new,                     \
+        char *: _vector_charptr_new,                     \
+        const char *: _vector_charptr_new,               \
+        int: _vector_int_new,                            \
+        char: _vector_char_new,                          \
+        long: _vector_long_new,                          \
+        default: _vector_voidptr_new                     \
+      ),                                                 \
+      __VA_ARGS__                                        \
     )
 #endif
 
