@@ -89,5 +89,24 @@ module(T_vector_push_pop_peek, {
       assert_that_int(vector_pop(st) equals to 88);
       assert_that_int(vector_pop(st) equals to 99);
     });
+
+    it("pops more elements than the size of the vector", {
+      int *st = NULL;
+      vector_push(st, 1);
+      vector_push(st, 2);
+      vector_push(st, 3);
+
+      assert_that_size_t(vector_size(st) equals to 3);
+      (void)vector_pop(st);
+      assert_that_size_t(vector_size(st) equals to 2);
+      (void)vector_pop(st);
+      assert_that_size_t(vector_size(st) equals to 1);
+      (void)vector_pop(st);
+      assert_that_size_t(vector_size(st) equals to 0);
+      (void)vector_pop(st);
+      assert_that_size_t(vector_size(st) equals to 0);
+      (void)vector_pop(st);
+      assert_that_size_t(vector_size(st) equals to 0);
+    });
   });
 })

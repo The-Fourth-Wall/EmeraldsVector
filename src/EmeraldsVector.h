@@ -475,8 +475,10 @@ p_inline long *_vector_long_new(size_t argc, ...) {
  * @param self -> vector
  * @return The last element of the vector
  */
-#define vector_pop(self) \
-  (_vector_get_header(self)->size--, (self)[_vector_get_header(self)->size])
+#define vector_pop(self)                                            \
+  (vector_size(self) > 0 ? (_vector_get_header(self)->size--,       \
+                            (self)[_vector_get_header(self)->size]) \
+                         : 0)
 
 /**
  * @brief Peeks at the last element of the vector without removing it
