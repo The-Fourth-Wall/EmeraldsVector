@@ -5,17 +5,21 @@ static int *v   = NULL;
 static int *dup = NULL;
 
 static void initialize_vectors(void) {
-  vector_free(v);
-  vector_free(dup);
   vector_add(v, 1);
   vector_add(v, 2);
   vector_add(v, 4);
   vector_dup(v, dup);
 }
 
+static void deinit_vectors(void) {
+  vector_free(v);
+  vector_free(dup);
+}
+
 module(T_vector_dup, {
   describe("#vector_dup", {
     before_each(&initialize_vectors);
+    after_each(&deinit_vectors);
 
     it("copies an empty vector", {
       int *empty     = NULL;
@@ -24,6 +28,8 @@ module(T_vector_dup, {
       assert_that_int(vector_size(empty) equals to 0);
       assert_that_int(vector_size(empty_dup) equals to 0);
       assert_that_int(vector_size(empty) equals to vector_size(empty_dup));
+      vector_free(empty);
+      vector_free(empty_dup);
     });
 
     it("copies a vector with 3 elements", {

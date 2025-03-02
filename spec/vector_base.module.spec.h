@@ -42,6 +42,8 @@ module(T_vector_base, {
       assert_that_int(vv[0] equals to 123);
       assert_that_int(vv[1] equals to 456);
       assert_that_int(vv[2] equals to 789);
+
+      vector_free(vv);
     });
 
     context("#vector_new", {
@@ -49,6 +51,7 @@ module(T_vector_base, {
         int *vv = vector_new(1);
         assert_that_int(vector_size(vv) equals to 1);
         assert_that_int(vv[0] equals to 1);
+        vector_free(vv);
       });
 
       it("initializes a new vector with 3 elements", {
@@ -57,6 +60,7 @@ module(T_vector_base, {
         assert_that_charptr(vv[0] equals to "A");
         assert_that_charptr(vv[1] equals to "B");
         assert_that_charptr(vv[2] equals to "C");
+        vector_free(vv);
       });
 
       it("creates a char* vector with `new`", {
@@ -65,12 +69,14 @@ module(T_vector_base, {
         assert_that_charptr(cv[0] equals to "a");
         assert_that_charptr(cv[1] equals to "b");
         assert_that_charptr(cv[2] equals to "c");
+        vector_free(cv);
       });
 
       it("creates a new vector with 1 element", {
         int *vv = vector_new(1);
         assert_that_int(vector_size(vv) equals to 1);
         assert_that_int(vv[0] equals to 1);
+        vector_free(vv);
       });
 
       it("creates new vectors but using variables instead of literals", {
@@ -91,6 +97,9 @@ module(T_vector_base, {
         assert_that_charptr(cv[0] equals to "a");
         assert_that_charptr(cv[1] equals to "b");
         assert_that_charptr(cv[2] equals to "c");
+
+        vector_free(vv);
+        vector_free(cv);
       });
     });
 
@@ -106,6 +115,7 @@ module(T_vector_base, {
         int *vv = NULL;
         vector_add(vv, 1);
         assert_that_int(vv[0] equals to 1);
+        vector_free(vv);
       });
     });
 
@@ -118,6 +128,7 @@ module(T_vector_base, {
         assert_that_int(vv[0] equals to 0);
         assert_that_int(vv[1] equals to 0);
         assert_that_int(vv[2] equals to 0);
+        vector_free(vv);
       });
 
       it("initializes a vector of 16 elements", {
@@ -131,6 +142,7 @@ module(T_vector_base, {
         assert_that_int(vv[0] equals to 0);
         assert_that_int(vv[15] equals to 0);
         assert_that_int(vv[16] equals to 1);
+        vector_free(vv);
       });
     });
 
@@ -143,6 +155,7 @@ module(T_vector_base, {
         assert_that_int(vector_size(vv) equals to 2);
         assert_that_int(vv[0] equals to 42);
         assert_that_int(vv[1] equals to 43);
+        vector_free(vv);
       });
 
       it("adds an element to an initialized vector", {
@@ -152,11 +165,13 @@ module(T_vector_base, {
         assert_that_int(vector_size(vv) equals to 2);
         assert_that_int(vv[0] equals to 42);
         assert_that_int(vv[1] equals to 43);
+        vector_free(vv);
       });
 
       it("creates a new vector with initial elements", {
         void *v = vector_voidptr_new(a, b, c);
         assert_that_int(vector_size(v) equals to 3);
+        vector_free(v);
       });
     });
 
@@ -165,6 +180,7 @@ module(T_vector_base, {
         int *vv = NULL;
         vector_add_n(vv, NULL, 1);
         assert_that(vv is NULL);
+        vector_free(vv);
       });
 
       it("adds multiple elements to a vector", {
@@ -175,6 +191,7 @@ module(T_vector_base, {
         _vector_get_header(vv)->size--;
         vector_add_n(vv, s1, 5);
         assert_that_charptr(vv equals to "12341234");
+        vector_free(vv);
       });
 
       it("adds multiple integers to a vector", {
@@ -187,6 +204,7 @@ module(T_vector_base, {
         assert_that_int(vv[2] equals to 3);
         assert_that_int(vv[3] equals to 4);
         assert_that_int(vv[4] equals to 5);
+        vector_free(vv);
       });
 
       it("adds multiple strings to a vector of strings", {
@@ -212,6 +230,9 @@ module(T_vector_base, {
         assert_that_charptr(vv2[3] equals to "a");
         assert_that_charptr(vv2[4] equals to "b");
         assert_that_charptr(vv2[5] equals to "c");
+
+        vector_free(vv);
+        vector_free(vv2);
       });
     });
 
@@ -226,6 +247,7 @@ module(T_vector_base, {
         assert_that_int(vv[1] equals to 2);
         assert_that_int(vv[2] equals to 1);
         assert_that_int(vv[3] equals to 2);
+        vector_free(vv);
       });
 
       it("adds a vector and its duplicate to the end of the vector", {
@@ -240,6 +262,8 @@ module(T_vector_base, {
         assert_that_int(vv[1] equals to 2);
         assert_that_int(vv[2] equals to 1);
         assert_that_int(vv[3] equals to 2);
+        vector_free(vv);
+        vector_free(vv2);
       });
 
       it("adds two different vectors to the end of the vector", {
@@ -257,6 +281,8 @@ module(T_vector_base, {
         assert_that_int(vv[2] equals to 3);
         assert_that_int(vv[3] equals to 4);
         assert_that_int(vv[4] equals to 5);
+        vector_free(vv);
+        vector_free(vv2);
       });
     });
 
@@ -274,6 +300,7 @@ module(T_vector_base, {
         vector_add_n(vv, "abcde", 6);
         vector_remove_n(vv, 1, 3);
         assert_that_charptr(vv equals to "ae");
+        vector_free(vv);
       });
 
       it("removes multiple elements from a vector", {
@@ -287,6 +314,7 @@ module(T_vector_base, {
         assert_that_int(vector_size(vv) equals to 2);
         assert_that_int(vv[0] equals to 1);
         assert_that_int(vv[1] equals to 5);
+        vector_free(vv);
       });
 
       it("removes an element from a vector", {
@@ -302,6 +330,7 @@ module(T_vector_base, {
         assert_that_int(vv[1] equals to 3);
         assert_that_int(vv[2] equals to 4);
         assert_that_int(vv[3] equals to 5);
+        vector_free(vv);
       });
 
       it("removes the last element from a vector", {
@@ -313,6 +342,7 @@ module(T_vector_base, {
         assert_that_int(vector_size(vv) equals to 2);
         assert_that_int(vv[0] equals to 1);
         assert_that_int(vv[1] equals to 5);
+        vector_free(vv);
       });
 
       it("deletes the second element on the vector", {
@@ -336,6 +366,7 @@ module(T_vector_base, {
         assert_that_int(vv[0] equals to 1);
         assert_that_int(vv[1] equals to 2);
         assert_that_int(vv[2] equals to 7);
+        vector_free(vv);
       });
 
       it("deletes the last element on the vector", {
@@ -352,6 +383,8 @@ module(T_vector_base, {
         vector_remove_last(vv);
         assert_that_int(vector_size(vv) equals to 1);
         assert_that_int(vv[0] equals to 1);
+
+        vector_free(vv);
       });
 
       it("counts the length correctly on additions and deletions", {
@@ -367,6 +400,8 @@ module(T_vector_base, {
         vector_remove(vv, 0);
         vector_remove(vv, 0);
         assert_that_int(vector_size(vv) equals to 0);
+
+        vector_free(vv);
       });
     });
 
@@ -376,6 +411,7 @@ module(T_vector_base, {
       vector_add(vv, 2);
       vector_add(vv, 3);
       assert_that_int(vector_last(vv) equals to 3);
+      vector_free(vv);
     });
 
     it("checks if the vector is empty", {
@@ -383,6 +419,7 @@ module(T_vector_base, {
       assert_that(vector_is_empty(vv));
       vector_add(vv, 1);
       nassert_that(vector_is_empty(vv));
+      vector_free(vv);
     });
 
     context("on getting header elements: capacity and size", {
@@ -395,6 +432,7 @@ module(T_vector_base, {
         vector_add(vv, 42);
         vector_add(vv, 43);
         assert_that_int(vector_capacity(vv) equals to 8);
+        vector_free(vv);
       });
 
       it("gets the current total capacity of the vector (signed)", {
@@ -403,6 +441,7 @@ module(T_vector_base, {
         vector_add(vv, 2);
         vector_add(vv, 3);
         assert_that_int(vector_capacity_signed(vv) equals to 4);
+        vector_free(vv);
       });
 
       it("gets the current total size of the vector", {
@@ -411,6 +450,7 @@ module(T_vector_base, {
         vector_add(vv, 2);
         vector_add(vv, 3);
         assert_that_int(vector_size(vv) equals to 3);
+        vector_free(vv);
       });
 
       it("gets the current total size of the vector (signed)", {
@@ -419,6 +459,7 @@ module(T_vector_base, {
         vector_add(vv, 2);
         vector_add(vv, 3);
         assert_that_int(vector_size_signed(vv) equals to 3);
+        vector_free(vv);
       });
     });
 
@@ -427,6 +468,7 @@ module(T_vector_base, {
         int *vv = NULL;
         vector_free(vv);
         assert_that(true is true);
+        vector_free(vv);
       });
 
       it("frees vector items without error", {
@@ -439,12 +481,14 @@ module(T_vector_base, {
       it("prints an empty vector", {
         int *vv = NULL;
         vector_display(vv, "%d");
+        vector_free(vv);
       });
 
       it("prints a vector with one element", {
         int *vv = NULL;
         vector_add(vv, 1);
         vector_display(vv, "%d");
+        vector_free(vv);
       });
 
       it("prints a vector with two elements", {
@@ -452,6 +496,7 @@ module(T_vector_base, {
         vector_add(vv, 1);
         vector_add(vv, 2);
         vector_display(vv, "%d");
+        vector_free(vv);
       });
 
       it("prints a vector with three elements", {
@@ -460,7 +505,10 @@ module(T_vector_base, {
         vector_add(vv, 2);
         vector_add(vv, 3);
         vector_display(vv, "%d");
+        vector_free(vv);
       });
     });
+
+    after({ vector_free(v); });
   });
 })

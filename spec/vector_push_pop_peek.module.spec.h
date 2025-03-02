@@ -12,6 +12,7 @@ module(T_vector_push_pop_peek, {
       assert_that_int(v[1] equals to 2);
       assert_that_int(v[2] equals to 4);
       assert_that(vector_size(v) is 3);
+      vector_free(v);
     });
   });
 
@@ -26,6 +27,7 @@ module(T_vector_push_pop_peek, {
       assert_that_int(res1 equals to 4);
       assert_that_int(res2 equals to 2);
       assert_that(vector_size(v) is 1);
+      vector_free(v);
     });
   });
 
@@ -42,6 +44,7 @@ module(T_vector_push_pop_peek, {
       assert_that_int(res2 equals to 2);
       assert_that_int(res3 equals to 4);
       assert_that(vector_size(v) is 3);
+      vector_free(v);
     });
   });
 
@@ -107,6 +110,10 @@ module(T_vector_push_pop_peek, {
       assert_that_size_t(vector_size(st) equals to 0);
       (void)vector_pop(st);
       assert_that_size_t(vector_size(st) equals to 0);
+
+      vector_free(st);
     });
+
+    after({ vector_free(st); });
   });
 })
