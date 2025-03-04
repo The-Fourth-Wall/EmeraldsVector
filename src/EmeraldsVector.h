@@ -216,9 +216,10 @@ typedef struct {
  * @brief Frees the memory of the vector
  * @param self -> The vector to free
  */
-#define vector_free(self)                                                \
-  ((void)((self) ? (void)(vector_allocator(_vector_get_header(self), 0)) \
-                 : (void)0),                                             \
+#define vector_free(self)                                                  \
+  ((self)                                                                  \
+     ? (*(void **)&(self) = vector_allocator(_vector_get_header(self), 0)) \
+     : 0,                                                                  \
    (self) = NULL)
 
 p_inline void *
