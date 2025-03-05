@@ -122,15 +122,19 @@ typedef struct {
  * @param item -> The item to add (usually byte sized like char*)
  * @param n -> The number with which to extend size
  */
-#define vector_add_n(self, item, n)                 \
-  ((item) != NULL ? _vector_maybegrow(self, n),     \
-   memmove(                                         \
-     (self) + vector_size(self),                    \
-     (item),                                        \
-     (n) * ((item) != NULL ? sizeof((self)[0]) : 0) \
-   ),                                               \
-   _vector_get_header(self)->size += (n)            \
-                  : 0)
+void _vector_add_n_helper(
+  void *dest, const void *src, size_t n, size_t elem_size
+);
+#define vector_add_n(self, item, n)                                \
+  do {                                                             \
+    if((item) != NULL) {                                           \
+      _vector_maybegrow(self, n);                                  \
+      _vector_add_n_helper(                                        \
+        (self) + vector_size(self), (item), (n), sizeof((self)[0]) \
+      );                                                           \
+      _vector_get_header(self)->size += (n);                       \
+    }                                                              \
+  } while(0)
 
 /**
  * @brief Adds a vector to the end of the vector
@@ -299,31 +303,11 @@ void *_vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap);
     _vector_long_new(                                                      \
       PREPROCESSOR_EXPANSIONS_NUMBER_OF_ELEMENTS(__VA_ARGS__), __VA_ARGS__ \
     )
-p_inline char *_vector_char_new(size_t argc, ...) {
-  char *self = NULL;
-  _vector_new(self, char, int, argc);
-  return self;
-}
-p_inline void **_vector_voidptr_new(size_t argc, ...) {
-  void **self = NULL;
-  _vector_new(self, void *, void *, argc);
-  return self;
-}
-p_inline char **_vector_charptr_new(size_t argc, ...) {
-  char **self = NULL;
-  _vector_new(self, char *, char *, argc);
-  return self;
-}
-p_inline int *_vector_int_new(size_t argc, ...) {
-  int *self = NULL;
-  _vector_new(self, int, int, argc);
-  return self;
-}
-p_inline long *_vector_long_new(size_t argc, ...) {
-  long *self = NULL;
-  _vector_new(self, long, long, argc);
-  return self;
-}
+char *_vector_char_new(size_t argc, ...);
+void **_vector_voidptr_new(size_t argc, ...);
+char **_vector_charptr_new(size_t argc, ...);
+int *_vector_int_new(size_t argc, ...);
+long *_vector_long_new(size_t argc, ...);
 #endif
 
 /**

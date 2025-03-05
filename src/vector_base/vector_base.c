@@ -33,3 +33,39 @@ _vector_growf(void *self, size_t elemsize, size_t addlen, size_t min_cap) {
 
   return b;
 }
+
+#if PREPROCESSOR_C_VERSION >= 1999
+char *_vector_char_new(size_t argc, ...) {
+  char *self = NULL;
+  _vector_new(self, char, int, argc);
+  return self;
+}
+void **_vector_voidptr_new(size_t argc, ...) {
+  void **self = NULL;
+  _vector_new(self, void *, void *, argc);
+  return self;
+}
+char **_vector_charptr_new(size_t argc, ...) {
+  char **self = NULL;
+  _vector_new(self, char *, char *, argc);
+  return self;
+}
+int *_vector_int_new(size_t argc, ...) {
+  int *self = NULL;
+  _vector_new(self, int, int, argc);
+  return self;
+}
+long *_vector_long_new(size_t argc, ...) {
+  long *self = NULL;
+  _vector_new(self, long, long, argc);
+  return self;
+}
+#endif
+
+void _vector_add_n_helper(
+  void *dest, const void *src, size_t n, size_t elem_size
+) {
+  if(src != NULL) {
+    memmove(dest, src, n * elem_size);
+  }
+}
